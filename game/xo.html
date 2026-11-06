@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกม XO - MiniGameHub</title>
+    <link rel="stylesheet" href="xo.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- ส่วนหัวและปุ่มย้อนกลับ -->
+        <header class="game-header">
+            <a href="home.html" class="btn-back">⬅ กลับหน้าหลัก</a>
+            <h1>❌⭕ เกม XO มัลติเพลเยอร์</h1>
+        </header>
+
+        <!-- 1. หน้าจอเลือกโหมดเกม -->
+        <div id="modeSelection" class="card-section">
+            <h2>เลือกโหมดการเล่น</h2>
+            <div class="mode-buttons">
+                <button class="btn-mode bot" onclick="selectMode('bot')">
+                    <span class="icon">🤖</span> เล่นกับบอท (AI)
+                </button>
+                <button class="btn-mode local" onclick="selectMode('local')">
+                    <span class="icon">👥</span> เล่น 2 คน (เครื่องเดียวกัน)
+                </button>
+                <button class="btn-mode online" onclick="selectMode('online')">
+                    <span class="icon">🌐</span> เล่นออนไลน์ (หลายเครื่อง)
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. หน้าจอห้องออนไลน์ -->
+        <div id="onlineLobby" class="card-section hidden">
+            <h2>🌐 ห้องเกมออนไลน์</h2>
+            <div class="lobby-box">
+                <button class="btn-primary glow" onclick="createOnlineRoom()">✨ สร้างห้องใหม่</button>
+                <div class="divider"><span>หรือ</span></div>
+                <div class="join-group">
+                    <input type="text" id="roomIdInput" placeholder="กรอกรหัสห้อง 8 หลัก" maxlength="8">
+                    <button class="btn-secondary" onclick="joinOnlineRoom()">เข้าร่วม</button>
+                </div>
+            </div>
+            <div id="roomInfoBox" class="room-info hidden">
+                <p>รหัสห้องของคุณ:</p>
+                <h3 id="displayRoomId">--------</h3>
+                <span id="roomStatusText" class="pulse-text">⏳ กำลังรอผู้เล่นคนที่ 2 เข้าห้อง...</span>
+            </div>
+            <button class="btn-back-mode" onclick="backToMenu()">⬅ กลับไปหน้าเลือกโหมด</button>
+        </div>
+
+        <!-- 3. กระดานเกมหลัก -->
+        <div id="gameArea" class="card-section hidden">
+            <div class="status-board" id="statusText">ตาของ: <span class="player-x">ผู้เล่น X</span></div>
+            
+            <div class="board" id="board">
+                <button class="cell" data-index="0"></button>
+                <button class="cell" data-index="1"></button>
+                <button class="cell" data-index="2"></button>
+                <button class="cell" data-index="3"></button>
+                <button class="cell" data-index="4"></button>
+                <button class="cell" data-index="5"></button>
+                <button class="cell" data-index="6"></button>
+                <button class="cell" data-index="7"></button>
+                <button class="cell" data-index="8"></button>
+            </div>
+
+            <button class="btn-secondary" onclick="backToMenu()" style="width: 100%; margin-top: 15px;">🏠 ออกไปหน้าเลือกโหมด</button>
+        </div>
+
+        <!-- หน้าต่างจบเกม -->
+        <div id="gameMessage" class="game-message hidden">
+            <div class="message-card">
+                <h2 id="messageText">X เป็นฝ่ายชนะ!</h2>
+                <p class="sub-message">กดปุ่ม R (หรือ พ) เพื่อเล่นใหม่</p>
+                <button id="restartBtn" class="btn-primary">เล่นอีกครั้ง</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="xo.js"></script>
+</body>
+</html>
