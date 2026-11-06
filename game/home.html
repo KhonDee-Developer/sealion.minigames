@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Game Hub - ศูนย์รวมมินิเกม</title>
+    <link rel="stylesheet" href="home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="navbar">
+        <div class="logo">🎮 MiniGameSeaLion</div>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="#home">หน้าแรก</a></li>
+                <li><a href="#games">เกมทั้งหมด</a></li>
+                <li><span id="userGreeting" style="color: #38bdf8; font-weight: 600;"></span></li>
+                <li><button id="logoutBtn" style="background: #f43f5e; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">ออกจากระบบ</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>ยินดีต้อนรับสู่อาณาจักรมินิเกม!</h1>
+            <p>เลือกเล่นเกมสุดสนุกได้ฟรี ไม่ต้องดาวน์โหลด</p>
+            <a href="#games" class="btn-primary">เริ่มเล่นเลย</a>
+        </div>
+    </section>
+
+    <!-- Game List Section -->
+    <section id="games" class="games-section">
+        <h2>คณะสมาคมสิงโตทะเล</h2>
+        ก
+        <!-- Filter Category -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-category="all">ทั้งหมด</button>
+            <button class="filter-btn" data-category="action">แอคชั่น</button>
+            <button class="filter-btn" data-category="puzzle">พัซเซิล</button>
+            <button class="filter-btn" data-category="arcade">อาร์เคด</button>
+        </div>
+
+        <!-- Game Cards Container -->
+        <div class="game-grid">
+            
+            <!-- Game Card 1: Snake -->
+            <div class="game-card" data-category="arcade">
+                <div class="game-thumb" style="background-color: #ff7675;">🐍</div>
+                <div class="game-info">
+                    <h3>เกมงูกินจุด (Snake)</h3>
+                    <p>คลาสสิกอาร์เคด เลื้อยเก็บจุดให้ยาวที่สุด!</p>
+                    <button class="btn-play" onclick="playGame('Snake')">เล่นเกม</button>
+                </div>
+            </div>
+
+            <!-- Game Card 2 -->
+            <div class="game-card" data-category="puzzle">
+                <div class="game-thumb" style="background-color: #74b9ff;">❌⭕</div>
+                <div class="game-info">
+                    <h3>XO (Tic-Tac-Toe)</h3>
+                    <p>เกมประลองปัญญา 3 ช่องสุดคลาสสิก</p>
+                    <button class="btn-play" onclick="playGame('Tic-Tac-Toe')">เล่นเกม</button>
+                </div>
+            </div>
+
+            <!-- Game Card 3 -->
+            <div class="game-card" data-category="action">
+                <div class="game-thumb" style="background-color: #55efc4;">🚀</div>
+                <div class="game-info">
+                    <h3>Space Runner</h3>
+                    <p>หลบอุกกาบาตและตะลุยอวกาศ</p>
+                    <button class="btn-play" onclick="playGame('Space Runner')">เล่นเกม</button>
+                </div>
+            </div>
+
+            <!-- Game Card 4 -->
+            <div class="game-card" data-category="puzzle">
+                <div class="game-thumb" style="background-color: #a29bfe;">🧠</div>
+                <div class="game-info">
+                    <h3>Memory Match</h3>
+                    <p>จับคู่ภาพที่ซ่อนอยู่ ฝึกความจำ</p>
+                    <button class="btn-play" onclick="playGame('Memory Match')">เล่นเกม</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 MiniGameSeaLoin. All rights reserved.</p>
+    </footer>
+
+    <script src="home.js"></script>
+</body>
+</html>
