@@ -127,14 +127,13 @@ function endGame() {
     gameMessage.classList.remove("hidden");
 }
 
-// ควบคุมทิศทางและรีเซ็ตเกมด้วยรหัสปุ่มจริง (Code)
+// ควบคุมทิศทางและรีเซ็ตเกมด้วยคีย์บอร์ด
 document.addEventListener("keydown", changeDirection);
 
 function changeDirection(event) {
-    const code = event.code; // ใช้ event.code เพื่ออิงตำแหน่งปุ่มบนคีย์บอร์ดโดยตรง ไม่สนว่าจะพิมพ์ภาษาอะไร
+    const code = event.code; 
     const key = event.key.toLowerCase();
 
-    // ปุ่มรีเซ็ต (รองรับทั้ง KeyR หรือตัวอักษร r, พ, ภ)
     if (code === 'KeyR' || key === 'r' || key === 'พ' || key === 'ภ') {
         initGame();
         return;
@@ -147,25 +146,21 @@ function changeDirection(event) {
     const goingRight = dx === gridSize;
     const goingLeft = dx === -gridSize;
 
-    // ซ้าย: KeyA (ฟ / A) หรือ ลูกศรซ้าย
     if ((code === 'KeyA' || key === 'a' || key === 'ฟ' || code === 'ArrowLeft') && !goingRight) {
         dx = -gridSize;
         dy = 0;
         changingDirection = true;
     }
-    // ขึ้น: KeyW (ไ / W) หรือ ลูกศรขึ้น
     if ((code === 'KeyW' || key === 'w' || key === 'ไ' || code === 'ArrowUp') && !goingDown) {
         dx = 0;
         dy = -gridSize;
         changingDirection = true;
     }
-    // ขวา: KeyD (ก / D) หรือ ลูกศรขวา  <-- ตอนนี้ปุ่ม D / ก ควบคุมไปทางขวาแล้วครับ
     if ((code === 'KeyD' || key === 'd' || key === 'ก' || code === 'ArrowRight') && !goingLeft) {
         dx = gridSize;
         dy = 0;
         changingDirection = true;
     }
-    // ลง: KeyS (ห / S) หรือ ลูกศรลง
     if ((code === 'KeyS' || key === 's' || key === 'ห' || code === 'ArrowDown') && !goingUp) {
         dx = 0;
         dy = gridSize;
@@ -174,6 +169,64 @@ function changeDirection(event) {
 }
 
 restartBtn.addEventListener("click", initGame);
+
+// --- ระบบควบคุมสำหรับมือถือ (Mobile / Touch Controls) ---
+
+document.getElementById("btnUp").addEventListener("touchstart", (e) => { e.preventDefault(); handleMobileMove('UP'); });
+document.getElementById("btnDown").addEventListener("touchstart", (e) => { e.preventDefault(); handleMobileMove('DOWN'); });
+document.getElementById("btnLeft").addEventListener("touchstart", (e) => { e.preventDefault(); handleMobileMove('LEFT'); });
+document.getElementById("btnRight").addEventListener("touchstart", (e) => { e.preventDefault(); handleMobileMove('RIGHT'); });
+
+document.getElementById("btnUp").addEventListener("click", () => handleMobileMove('UP'));
+document.getElementById("btnDown").addEventListener("click", () => handleMobileMove('DOWN'));
+document.getElementById("btnLeft").addEventListener("click", () => handleMobileMove('LEFT'));
+document.getElementById("btnRight").addEventListener("click", () => handleMobileMove('RIGHT'));
+
+function handleMobileMove(dir) {
+    if (changingDirection || isGameOver) return;
+
+    const goingUp = dy === -gridSize;
+    const goingDown = dy === gridSize;
+    const goingRight = dx === gridSize;
+    const goingLeft = dx === -gridSize;
+
+    if (dir === 'LEFT' && !goingRight) { dx = -gridSize; dy = 0; changingDirection = true; }
+    if (dir === 'UP' && !goingDown) { dx = 0; dy = -gridSize; changingDirection = true; }
+    if (dir === 'RIGHT' && !goingLeft) { dx = gridSize; dy = 0; changingDirection = true; }
+    if (dir === 'DOWN' && !goingUp) { dx = 0; dy = gridSize; changingDirection = true; }
+}
+
+// ระบบปัดหน้าจอ (Swipe Controls) บน Canvas
+let touchStartX = 0;
+let touchStartY = 0;
+
+canvas.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+canvas.addEventListener("touchend", (e) => {
+    if (!touchStartX || !touchStartY || changingDirection || isGameOver) return;
+
+    let touchEndX = e.changedTouches[0].clientX;
+    let touchEndY = e.changedTouches[0].clientY;
+
+    let diffX = touchEndX - touchStartX;
+    let diffY = touchEndY - touchStartY;
+
+    if (Math.abs(diffX) > Math.abs(diffY)) {
+        if (Math.abs(diffX) > 30) {
+            handleMobileMove(diffX > 0 ? 'RIGHT' : 'LEFT');
+        }
+    } else {
+        if (Math.abs(diffY) > 30) {
+            handleMobileMove(diffY > 0 ? 'DOWN' : 'UP');
+        }
+    }
+
+    touchStartX = 0;
+    touchStartY = 0;
+}, { passive: true });
 
 // เริ่มเกมทันทีเมื่อเปิดหน้าเว็บ
 initGame();

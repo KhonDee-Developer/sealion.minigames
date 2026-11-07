@@ -13,6 +13,8 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    touch-action: manipulation;
+    overflow-x: hidden;
 }
 
 .game-container {
@@ -62,7 +64,9 @@ body {
 
 .canvas-wrapper {
     position: relative;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 canvas {
@@ -71,6 +75,9 @@ canvas {
     border-radius: 8px;
     display: block;
     margin: 0 auto;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
 }
 
 .game-message {
@@ -118,4 +125,47 @@ canvas {
 .btn-primary:hover {
     background-color: #7dd3fc;
     transform: scale(1.05);
+}
+
+/* ปุ่มควบคุมสำหรับมือถือ (Touch D-Pad) */
+.touch-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 8px;
+}
+
+.dpad-row {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.dpad-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+    background-color: #334155;
+    color: #f8fafc;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.1s, transform 0.1s;
+}
+
+.dpad-btn:active {
+    background-color: #38bdf8;
+    color: #0f172a;
+    transform: scale(0.95);
+}
+
+/* ซ่อน D-Pad บนหน้าจอคอมพิวเตอร์ขนาดใหญ่ */
+@media (min-width: 768px) {
+    .touch-controls {
+        display: none;
+    }
 }

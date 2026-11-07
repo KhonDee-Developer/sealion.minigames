@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Memory Match - MiniGameHub</title>
+    <link rel="stylesheet" href="memory.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="game-container">
+        <!-- หน้าเลือกโหมดเกม -->
+        <div id="modeSelection" class="lobby-section">
+            <a href="home.html" class="btn-back">⬅ กลับหน้าหลัก</a>
+            <h1>🧠 Memory Match</h1>
+            <p class="sub-message" style="margin-top: 5px; margin-bottom: 20px;">เลือกโหมดการเล่นที่คุณต้องการ</p>
+            
+            <div class="lobby-box" style="display: flex; flex-direction: column; gap: 12px;">
+                <button onclick="selectMode('single')" class="btn-primary" style="width: 100%; padding: 0.8rem;">👤 เล่นคนเดียว (ฝึกความจำ)</button>
+                <button onclick="selectMode('online')" class="btn-secondary" style="width: 100%; padding: 0.8rem; border-radius: 12px; border: none; background: #334155; color: #fff; font-weight: 600; cursor: pointer;">🌐 เล่นออนไลน์ (สร้างห้อง / จอยห้อง)</button>
+            </div>
+        </div>
+
+        <!-- หน้าล็อบบี้ออนไลน์ -->
+        <div id="onlineLobby" class="lobby-section hidden">
+            <button onclick="backToMenu()" class="btn-back">⬅ กลับหน้าหลัก</button>
+            <h1>🌐 โหมดออนไลน์</h1>
+            <div class="lobby-box" style="margin-top: 1.2rem;">
+                <button onclick="createOnlineRoom()" class="btn-primary" style="margin-bottom: 12px; width: 100%;">🏠 สร้างห้องใหม่</button>
+                <div class="divider" style="margin: 8px 0; color: #94a3b8;">หรือ</div>
+                <input type="text" id="roomIdInput" placeholder="กรอกรหัสห้อง 8 หลัก" maxlength="8" style="text-transform: uppercase; width: 100%; padding: 0.7rem; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: #fff; text-align: center; font-size: 1rem; margin-bottom: 10px;">
+                <button onclick="joinOnlineRoom()" class="btn-secondary" style="width: 100%; padding: 0.7rem; border-radius: 10px; border: none; background: #334155; color: #fff; font-weight: 600; cursor: pointer;">🚪 เข้าร่วมห้อง</button>
+            </div>
+            <div id="roomInfoBox" class="hidden" style="margin-top: 15px;">
+                <p>รหัสห้องของคุณ: <strong id="displayRoomId" style="color: #38bdf8; font-size: 1.2rem;">--------</strong></p>
+                <p id="roomStatusText" style="color: #facc15; margin-top: 5px;">⏳ กำลังรอผู้เล่นคนที่ 2...</p>
+            </div>
+        </div>
+
+        <!-- พื้นที่เล่นเกมจริง -->
+        <div id="gameArea" class="hidden">
+            <div class="game-header">
+                <button onclick="backToMenu()" class="btn-back">⬅ กลับหน้าหลัก</button>
+                
+                <!-- ปุ่มเริ่มเกมใหม่ระหว่างเล่น -->
+                <button onclick="restartGame()" class="btn-restart">🔄 เริ่มใหม่</button>
+
+                <h1 style="font-size: 1.2rem;" id="gameTitle">🧠 Memory Match</h1>
+                
+                <div class="turn-indicator hidden" id="turnIndicator">ตาของ: ผู้เล่น 1 🔴</div>
+                
+                <!-- Score Board -->
+                <div class="score-board" id="scoreBoardContainer"></div>
+
+                <!-- แถบสถิติดีที่สุด -->
+                <div id="bestRecordBanner" class="best-record-banner">
+                    🏆 สถิติดีที่สุด: <span id="bestRecordText" style="color: #facc15; font-weight: 600;">ยังไม่มีสถิติ</span>
+                </div>
+            </div>
+
+            <div class="cards-grid" id="cardGrid"></div>
+        </div>
+
+        <!-- หน้าต่างแสดงตอนจบเกม (ไม่ออกจากเกมทันที มีปุ่มให้เลือก) -->
+        <div id="gameMessage" class="game-message hidden">
+            <div class="message-card">
+                <h2 id="winnerText">🎉 เกมจบแล้ว!</h2>
+                <p class="sub-message" id="finalScoreText" style="margin-bottom: 1.5rem;">คะแนนรวม...</p>
+                <div style="display: flex; flex-direction: column; gap: 8px;">
+                    <button onclick="restartGame()" class="btn-primary" style="width: 100%;">🔄 เล่นใหม่อีกครั้ง</button>
+                    <button onclick="backToMenu()" class="btn-secondary" style="width: 100%; padding: 0.7rem; border-radius: 12px; border: none; background: #334155; color: #fff; font-weight: 600; cursor: pointer;">⬅ กลับหน้าหลัก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="memory.js"></script>
+</body>
+</html>

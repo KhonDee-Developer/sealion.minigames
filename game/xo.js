@@ -27,6 +27,44 @@ let currentRoomId = null;
 let myRole = "X";
 let pollInterval = null;
 
+let playerXName = "ผู้เล่น X";
+let playerOName = "ผู้เล่น O";
+
+// --- ระบบคะแนนสำหรับโหมด Local (เล่น 2 คนในเครื่อง) ---
+let localScores = { X: 0, O: 0, draws: 0 };
+
+// --- ระบบสถิติสำหรับโหมด Bot / Online ---
+let stats = JSON.parse(localStorage.getItem('xoStats')) || { wins: 0, losses: 0, draws: 0 };
+
+function updateStatsDisplay() {
+    let statsBox = document.getElementById('statsBox');
+    if (!statsBox) {
+        statsBox = document.createElement('div');
+        statsBox.id = 'statsBox';
+        statsBox.className = 'score-board';
+        statsBox.style.margin = '10px 0';
+        statsBox.style.display = 'flex';
+        statsBox.style.justifyContent = 'space-around';
+        gameArea.insertBefore(statsBox, statusText);
+    }
+
+    if (currentMode === 'local') {
+        // แสดงคะแนนผู้เล่น X และ O สำหรับเล่นในเครื่องเดียวกัน
+        statsBox.innerHTML = `
+            <span>❌ ผู้เล่น X: <strong style="color: #38bdf8;">${localScores.X}</strong></span> | 
+            <span>⭕ ผู้เล่น O: <strong style="color: #f43f5e;">${localScores.O}</strong></span> | 
+            <span>🤝 เสมอ: <strong style="color: #94a3b8;">${localScores.draws}</strong></span>
+        `;
+    } else {
+        // แสดงสถิติ ชนะ/แพ้/เสมอ สำหรับโหมด Bot หรือ Online
+        statsBox.innerHTML = `
+            <span>🏆 ชนะ: <strong style="color: #4ade80;">${stats.wins}</strong></span> | 
+            <span>❌ แพ้: <strong style="color: #f43f5e;">${stats.losses}</strong></span> | 
+            <span>🤝 เสมอ: <strong style="color: #38bdf8;">${stats.draws}</strong></span>
+        `;
+    }
+}
+
 function selectMode(mode) {
     currentMode = mode;
     modeSelection.classList.add('hidden');
@@ -54,8 +92,11 @@ function initGame() {
     boardState = ["", "", "", "", "", "", "", "", ""];
     currentPlayer = "X";
     isGameActive = true;
+    playerXName = "ผู้เล่น X";
+    playerOName = "ผู้เล่น O";
     
-    statusText.innerHTML = `ตาของ: <span class="player-x">ผู้เล่น X</span>`;
+    updateStatusText();
+    updateStatsDisplay();
     gameMessage.classList.add('hidden');
 
     cells.forEach(cell => {
@@ -130,12 +171,35 @@ function checkWinOrDraw(player) {
     }
 
     if (roundWon) {
-        const winnerName = currentMode === 'bot' && player === "O" ? "คอมพิวเตอร์ (O)" : `ผู้เล่น ${player}`;
+        let winnerName = "";
+        if (currentMode === 'local') {
+            winnerName = `ผู้เล่น ${player}`;
+            if (player === "X") localScores.X++;
+            else localScores.O++;
+            updateStatsDisplay();
+        } else if (currentMode === 'bot') {
+            winnerName = player === "O" ? "คอมพิวเตอร์ (O)" : `ผู้เล่น ${player}`;
+            if (player === "X") { stats.wins++; } else { stats.losses++; }
+            localStorage.setItem('xoStats', JSON.stringify(stats));
+            updateStatsDisplay();
+        } else if (currentMode === 'online') {
+            winnerName = player === "X" ? playerXName : playerOName;
+            if (player === myRole) { stats.wins++; } else { stats.losses++; }
+            localStorage.setItem('xoStats', JSON.stringify(stats));
+            updateStatsDisplay();
+        }
         endGame(`${winnerName} ชนะแล้ว! 🎉`);
         return true;
     }
 
     if (!boardState.includes("")) {
+        if (currentMode === 'local') {
+            localScores.draws++;
+        } else {
+            stats.draws++;
+            localStorage.setItem('xoStats', JSON.stringify(stats));
+        }
+        updateStatsDisplay();
         endGame("เสมอกัน! 🤝");
         return true;
     }
@@ -144,8 +208,18 @@ function checkWinOrDraw(player) {
 
 function updateStatusText() {
     const playerClass = currentPlayer === "X" ? "player-x" : "player-o";
-    const playerName = currentMode === 'bot' && currentPlayer === "O" ? "คอมพิวเตอร์ (O)" : `ผู้เล่น ${currentPlayer}`;
-    statusText.innerHTML = `ตาของ: <span class="${playerClass}">${playerName}</span>`;
+    let displayName = "";
+
+    if (currentMode === 'bot') {
+        displayName = currentPlayer === "O" ? "คอมพิวเตอร์ (O)" : `ผู้เล่น ${currentPlayer}`;
+    } else if (currentMode === 'online') {
+        const activeName = currentPlayer === "X" ? playerXName : playerOName;
+        displayName = `${activeName} (${currentPlayer})`;
+    } else {
+        displayName = `ผู้เล่น ${currentPlayer}`;
+    }
+
+    statusText.innerHTML = `ตาของ: <span class="${playerClass}">${displayName}</span>`;
 }
 
 function endGame(message) {
@@ -154,9 +228,10 @@ function endGame(message) {
     gameMessage.classList.remove('hidden');
 }
 
-// --- ระบบออนไลน์ 8 หลัก ---
+// --- ระบบออนไลน์ ---
 async function createOnlineRoom() {
     const user = localStorage.getItem("currentUser") || "Host";
+    playerXName = user;
     roomStatusText.innerText = "⏳ กำลังสร้างห้อง...";
     roomInfoBox.classList.remove('hidden');
     
@@ -172,6 +247,8 @@ async function createOnlineRoom() {
             displayRoomId.innerText = currentRoomId;
             roomStatusText.innerText = "⏳ รอเพื่อนกรอกรหัสเข้าร่วมห้อง...";
             startPolling();
+        } else {
+            alert(result.message || "ไม่สามารถสร้างห้องได้");
         }
     } catch (e) {
         alert("เกิดข้อผิดพลาดในการสร้างห้อง");
@@ -185,7 +262,14 @@ async function joinOnlineRoom() {
         return;
     }
     
+    if (currentRoomId && currentRoomId === roomId) {
+        alert("คุณไม่สามารถเข้าร่วมห้องที่ตัวเองสร้างได้ครับ!");
+        return;
+    }
+    
     const user = localStorage.getItem("currentUser") || "Guest";
+    playerOName = user;
+    
     try {
         const res = await fetch(GAS_URL, {
             method: "POST",
@@ -199,18 +283,21 @@ async function joinOnlineRoom() {
             gameArea.classList.remove('hidden');
             startPolling();
         } else {
-            alert(result.message);
+            alert(result.message || "เข้าร่วมห้องไม่สำเร็จ");
         }
     } catch (e) {
         alert("เชื่อมต่อห้องไม่สำเร็จ");
     }
 }
 
+let isSyncing = false;
+
 function startPolling() {
     if (pollInterval) clearInterval(pollInterval);
     pollInterval = setInterval(async () => {
-        if (!currentRoomId) return;
+        if (!currentRoomId || isSyncing) return;
 
+        isSyncing = true;
         try {
             const res = await fetch(GAS_URL, {
                 method: "POST",
@@ -219,29 +306,39 @@ function startPolling() {
             const data = await res.json();
 
             if (data.status === "success") {
-                // ถ้า Host รออยู่แล้วมีคนเข้าห้องแล้ว ให้สลับเข้าหน้าจอเกม
                 if (data.roomStatus === "playing" && onlineLobby.classList.contains('hidden') === false) {
                     onlineLobby.classList.add('hidden');
                     gameArea.classList.remove('hidden');
                 }
                 
+                if (data.playerX) playerXName = data.playerX;
+                if (data.playerO) playerOName = data.playerO;
+
                 boardState = data.boardState;
                 currentPlayer = data.currentTurn;
                 
                 boardState.forEach((val, idx) => {
                     const cell = document.querySelector(`[data-index='${idx}']`);
-                    cell.innerText = val;
-                    cell.className = "cell " + val.toLowerCase();
+                    if (cell.innerText !== val) {
+                        cell.innerText = val;
+                        cell.className = "cell " + (val ? val.toLowerCase() : "");
+                    }
                 });
 
                 updateStatusText();
 
-                if (data.roomStatus === "finished") {
-                    endGame("เกมจบแล้ว!");
+                if (data.roomStatus === "finished" || data.isFinished) {
+                    const winner = data.winner || (currentPlayer === "X" ? "O" : "X");
+                    const winnerName = winner === "X" ? playerXName : playerOName;
+                    endGame(`${winnerName} ชนะแล้ว! 🎉`);
                 }
             }
-        } catch (e) { console.error(e); }
-    }, 1500);
+        } catch (e) { 
+            console.error("Polling error:", e); 
+        } finally {
+            isSyncing = false;
+        }
+    }, 2000);
 }
 
 async function handleOnlineMove(index) {
@@ -250,30 +347,56 @@ async function handleOnlineMove(index) {
         return;
     }
 
+    if (boardState[index] !== "") return;
+
     boardState[index] = myRole;
-    
+    const cell = document.querySelector(`[data-index='${index}']`);
+    cell.innerText = myRole;
+    cell.className = "cell " + myRole.toLowerCase();
+
     let isFinished = false;
+    let winnerSymbol = null;
     for (let pattern of winPatterns) {
         const [a, b, c] = pattern;
         if (boardState[a] && boardState[a] === boardState[b] && boardState[a] === boardState[c]) {
             isFinished = true;
+            winnerSymbol = boardState[a];
             break;
         }
     }
     if (!boardState.includes("")) isFinished = true;
 
     const nextTurn = myRole === "X" ? "O" : "X";
+    currentPlayer = nextTurn;
+    updateStatusText();
 
-    await fetch(GAS_URL, {
-        method: "POST",
-        body: JSON.หน้า || JSON.stringify({
-            action: "makeMove",
-            roomId: currentRoomId,
-            boardState: boardState,
-            currentTurn: nextTurn,
-            isFinished: isFinished
-        })
-    });
+    try {
+        await fetch(GAS_URL, {
+            method: "POST",
+            body: JSON.stringify({
+                action: "makeMove",
+                roomId: currentRoomId,
+                boardState: boardState,
+                currentTurn: nextTurn,
+                isFinished: isFinished,
+                winner: winnerSymbol
+            })
+        });
+        
+        if (isFinished) {
+            if (winnerSymbol === myRole) { stats.wins++; } 
+            else if (winnerSymbol) { stats.losses++; } 
+            else { stats.draws++; }
+            localStorage.setItem('xoStats', JSON.stringify(stats));
+            updateStatsDisplay();
+
+            const winnerName = winnerSymbol ? (winnerSymbol === "X" ? playerXName : playerOName) : "ไม่มี";
+            const msg = winnerSymbol ? `${winnerName} ชนะแล้ว! 🎉` : "เสมอกัน! 🤝";
+            endGame(msg);
+        }
+    } catch (e) {
+        alert("เกิดข้อผิดพลาดในการส่งข้อมูลการเดิน");
+    }
 }
 
 // ปุ่มรีเซ็ตสำหรับโหมดเล่นคนเดียว/เครื่องเดียวกัน
@@ -288,11 +411,9 @@ restartBtn.addEventListener('click', () => {
     if (currentMode !== 'online') initGame();
 });
 
-// ฟังก์ชันสำหรับจำลองการเข้าเล่นห้องที่ตัวเองสร้าง (กรณีเทสคนเดียว)
 async function simulateJoinSelf() {
     if (!currentRoomId) return;
     
-    // บังคับเปลี่ยนสถานะห้องใน Google Sheets ให้เป็น playing
     try {
         await fetch(GAS_URL, {
             method: "POST",
@@ -303,9 +424,10 @@ async function simulateJoinSelf() {
             })
         });
         
+        playerOName = "TestPlayer2@gmail.com";
         onlineLobby.classList.add('hidden');
         gameArea.classList.remove('hidden');
-        myRole = "X"; // ให้เราเป็นผู้เล่น X
+        myRole = "X";
         alert("จำลองเข้าห้องสำเร็จ! เริ่มเกมได้เลย");
     } catch (e) {
         alert("เกิดข้อผิดพลาดในการจำลองเข้าห้อง");

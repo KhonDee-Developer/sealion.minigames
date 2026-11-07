@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Space Runner - MiniGameHub</title>
+    <link rel="stylesheet" href="space.css">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="game-container">
+        <header class="game-header">
+            <a href="home.html" class="btn-back">⬅ กลับหน้าหลัก</a>
+            <h1>🚀 Space Runner</h1>
+            <div class="score-board">คะแนน: <span id="score">0</span> | สูงสุด: <span id="highScore">0</span></div>
+        </header>
+
+        <div class="canvas-wrapper">
+            <canvas id="spaceCanvas" width="400" height="500"></canvas>
+            
+            <!-- หน้าต่างแสดงตอนจบเกม -->
+            <div id="gameMessage" class="game-message hidden">
+                <h2 id="messageText">GAME OVER</h2>
+                <p id="subMessageText" class="sub-message">กดปุ่ม R (พ) หรือแตะปุ่มเล่นใหม่</p>
+                <button id="restartBtn" class="btn-primary">เล่นอีกครั้ง</button>
+            </div>
+        </div>
+
+        <!-- ปุ่มควบคุม 4 ทิศทางสำหรับมือถือ -->
+        <div class="mobile-controls">
+            <div class="control-row">
+                <button id="btnUp" class="control-btn">▲ ขึ้น</button>
+            </div>
+            <div class="control-row">
+                <button id="btnLeft" class="control-btn">◀ ซ้าย</button>
+                <button id="btnDown" class="control-btn">▼ ลง</button>
+                <button id="btnRight" class="control-btn">ขวา ▶</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="space.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>เกมงูกินจุด - MiniGameHub</title>
     <link rel="stylesheet" href="snake.css">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
@@ -24,6 +24,18 @@
                 <h2 id="messageText">GAME OVER</h2>
                 <p id="subMessageText" class="sub-message">กดปุ่ม R เพื่อเล่นใหม่</p>
                 <button id="restartBtn" class="btn-primary">เล่นอีกครั้ง</button>
+            </div>
+        </div>
+
+        <!-- ปุ่มควบคุมสำหรับมือถือ (Touch D-Pad) -->
+        <div class="touch-controls">
+            <div class="dpad-row">
+                <button class="dpad-btn" id="btnUp">▲</button>
+            </div>
+            <div class="dpad-row">
+                <button class="dpad-btn" id="btnLeft">◄</button>
+                <button class="dpad-btn" id="btnDown">▼</button>
+                <button class="dpad-btn" id="btnRight">►</button>
             </div>
         </div>
     </div>

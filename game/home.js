@@ -52,7 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
 // 4. ฟังก์ชันควบคุมการกดปุ่มเล่นเกม
 function playGame(gameName) {
     if (gameName === 'Snake') {
-        window.location.href = 'snake.html'; // เปิดหน้าเล่นเกมงู
+        window.location.href = 'snake.html'; // เปิดหน้าเกมงู
+    } else if (gameName === 'Tic-Tac-Toe') {
+        window.location.href = 'xo.html'; // เปิดหน้าเกม XO
+    } else if (gameName === 'Space Runner') {
+        window.location.href = 'space.html'; // เปิดหน้าเกม Space Runner
     } else {
         alert(`เกม ${gameName} กำลังอยู่ในช่วงพัฒนา!`);
     }
@@ -62,7 +66,11 @@ function playGame(gameName) {
     if (gameName === 'Snake') {
         window.location.href = 'snake.html';
     } else if (gameName === 'Tic-Tac-Toe') {
-        window.location.href = 'xo.html'; // เพิ่มบรรทัดนี้เข้ามา
+        window.location.href = 'xo.html';
+    } else if (gameName === 'Space Runner') {
+        window.location.href = 'space.html';
+    } else if (gameName === 'Memory Match') {
+        window.location.href = 'memory.html'; // เพิ่มบรรทัดนี้
     } else {
         alert(`เกม ${gameName} กำลังอยู่ในช่วงพัฒนา!`);
     }
