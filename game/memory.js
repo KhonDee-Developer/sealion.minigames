@@ -35,10 +35,9 @@ let singleFlipCount = 0;
 let singleTimer = 0;
 let singleTimerInterval = null;
 
-// รองรับการกดปุ่ม 'R' หรือ 'r' บนคีย์บอร์ดเพื่อเริ่มใหม่
+// รองรับการกดปุ่ม 'R', 'r', 'พ', 'P' บนคีย์บอร์ดเพื่อเริ่มใหม่
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'r' || e.key === 'R') {
-        // เช็คว่าอยู่ในหน้าจอเล่นเกม หรือหน้าต่างจบเกมแสดงอยู่หรือไม่
+    if (e.key === 'r' || e.key === 'R' || e.key === 'พ' || e.key === 'P') {
         if (!gameArea.classList.contains('hidden')) {
             restartGame();
         }
@@ -69,11 +68,12 @@ function backToMenu() {
     modeSelection.classList.remove('hidden');
     roomInfoBox.classList.add('hidden');
     currentRoomId = null;
+    isSyncing = false;
 }
 
 // ฟังก์ชันสำหรับเริ่มเกมใหม่
 function restartGame() {
-    gameMessage.classList.add('hidden'); // ซ่อนหน้าต่างจบเกม (ถ้ามี)
+    gameMessage.classList.add('hidden');
     if (singleTimerInterval) clearInterval(singleTimerInterval);
 
     if (currentMode === 'single') {
@@ -132,7 +132,7 @@ function initSinglePlayerGame() {
 
     if (singleTimerInterval) clearInterval(singleTimerInterval);
 
-    cardsData.forEach((icon, index) => {
+    cardsData.forEach((icon) => {
         const card = document.createElement('div');
         card.classList.add('card');
         card.dataset.icon = icon;
@@ -205,9 +205,25 @@ async function createOnlineRoom() {
     roomInfoBox.classList.remove('hidden');
 
     try {
+        let cardsData = [...icons, ...icons];
+        cardsData.sort(() => Math.random() - 0.5);
+        
+        const initialCards = cardsData.map((icon, index) => ({
+            id: index,
+            icon: icon,
+            flipped: false,
+            matched: false
+        }));
+
         const res = await fetch(GAS_URL, {
             method: "POST",
-            body: JSON.stringify({ action: "createRoom", playerEmail: user })
+            body: JSON.stringify({ 
+                action: "createRoom", 
+                playerEmail: user,
+                cards: initialCards,
+                scores: { 1: 0, 2: 0 },
+                currentTurn: 1
+            })
         });
         const result = await res.json();
         if (result.status === "success") {
@@ -217,7 +233,7 @@ async function createOnlineRoom() {
             roomStatusText.innerText = "⏳ รอผู้เล่นคนที่ 2 กรอกรหัสเข้ามา...";
             startPolling();
         } else {
-            alert(result.message);
+            alert(result.message || "ไม่สามารถสร้างห้องได้");
         }
     } catch (e) {
         alert("เกิดข้อผิดพลาดในการสร้างห้อง");
@@ -248,7 +264,7 @@ async function joinOnlineRoom() {
             bestRecordBanner.classList.add('hidden');
             startPolling();
         } else {
-            alert(result.message);
+            alert(result.message || "เข้าร่วมห้องไม่สำเร็จ");
         }
     } catch (e) {
         alert("เชื่อมต่อห้องไม่สำเร็จ");
@@ -269,26 +285,38 @@ function startPolling() {
             const data = await res.json();
 
             if (data.status === "success") {
-                playerXName = data.playerX;
-                playerOName = data.playerO || "รอผู้เล่น...";
+                if (data.playerX) playerXName = data.playerX;
+                if (data.playerO) playerOName = data.playerO || "รอผู้เล่น...";
                 
                 turnIndicator.classList.remove('hidden');
-                scoreBoardContainer.innerHTML = `<span id="p1Label">${playerXName}: <strong id="p1Score">${data.scores[1]}</strong> คู่</span> | <span id="p2Label">${playerOName}: <strong id="p2Score">${data.scores[2]}</strong> คู่</span>`;
+                scoreBoardContainer.innerHTML = `<span id="p1Label">${playerXName}: <strong id="p1Score">${data.scores ? data.scores[1] : 0}</strong> คู่</span> | <span id="p2Label">${playerOName}: <strong id="p2Score">${data.scores ? data.scores[2] : 0}</strong> คู่</span>`;
 
                 if (data.roomStatus === "playing" && onlineLobby.classList.contains('hidden') === false) {
                     onlineLobby.classList.add('hidden');
                     gameArea.classList.remove('hidden');
                     bestRecordBanner.classList.add('hidden');
-                    initOnlineBoard(data.cards);
                 }
 
-                if (data.roomStatus === "playing") {
+                if (data.cards && Array.isArray(data.cards)) {
+                    if (cardGrid.children.length === 0) {
+                        initOnlineBoard(data.cards);
+                    } else {
+                        gameCardsState = data.cards;
+                        updateBoardState(data.cards);
+                    }
+                }
+
+                if (data.currentTurn) {
                     currentTurn = parseInt(data.currentTurn);
-                    scores = data.scores;
-                    document.getElementById('p1Score').innerText = scores[1];
-                    document.getElementById('p2Score').innerText = scores[2];
                     updateTurnDisplay();
-                    updateBoardState(data.cards);
+                }
+
+                if (data.scores) {
+                    scores = data.scores;
+                    const p1El = document.getElementById('p1Score');
+                    const p2El = document.getElementById('p2Score');
+                    if (p1El) p1El.innerText = scores[1];
+                    if (p2El) p2El.innerText = scores[2];
                 }
 
                 if (data.roomStatus === "finished" || data.winner) {
@@ -304,19 +332,21 @@ function startPolling() {
 }
 
 function initOnlineBoard(cardsArray) {
-    if (cardGrid.children.length > 0) return;
     cardGrid.innerHTML = '';
-    gameCardsState = cardsArray.map((icon, index) => ({
+    gameCardsState = cardsArray.map((card, index) => ({
         id: index,
-        icon: icon,
-        flipped: false,
-        matched: false
+        icon: card.icon,
+        flipped: card.flipped || false,
+        matched: card.matched || false
     }));
 
     gameCardsState.forEach((card, index) => {
         const cardEl = document.createElement('div');
         cardEl.classList.add('card');
         cardEl.dataset.index = index;
+        if (card.flipped) cardEl.classList.add('flipped');
+        if (card.matched) cardEl.classList.add('matched');
+
         cardEl.innerHTML = `
             <div class="card-face card-front">❓</div>
             <div class="card-face card-back">${card.icon}</div>
@@ -331,6 +361,9 @@ function updateBoardState(serverCards) {
         const cardEl = cardGrid.children[index];
         if (!cardEl) return;
 
+        gameCardsState[index].flipped = srvCard.flipped;
+        gameCardsState[index].matched = srvCard.matched;
+
         if (srvCard.flipped && !cardEl.classList.contains('flipped')) {
             cardEl.classList.add('flipped');
         } else if (!srvCard.flipped && cardEl.classList.contains('flipped')) {
@@ -344,18 +377,18 @@ function updateBoardState(serverCards) {
 }
 
 async function handleOnlineCardClick(index) {
-    if (currentTurn.toString() !== myRole) {
+    if (currentTurn.toString() !== myRole.toString()) {
         alert("ยังไม่ใช่ตาของคุณ!");
         return;
     }
 
-    let flippedCount = gameCardsState.filter(c => c.flipped && !c.matched).length;
-    if (flippedCount >= 2 || gameCardsState[index].flipped || gameCardsState[index].matched) return;
+    let activeFlipped = gameCardsState.filter(c => c.flipped && !c.matched);
+    if (activeFlipped.length >= 2 || gameCardsState[index].flipped || gameCardsState[index].matched) return;
 
     gameCardsState[index].flipped = true;
     updateBoardStateLocally();
 
-    let activeFlipped = gameCardsState.filter(c => c.flipped && !c.matched);
+    activeFlipped = gameCardsState.filter(c => c.flipped && !c.matched);
 
     if (activeFlipped.length === 2) {
         if (activeFlipped[0].icon === activeFlipped[1].icon) {
@@ -373,11 +406,15 @@ async function handleOnlineCardClick(index) {
 
             await syncToServer(gameCardsState, currentTurn, scores, isFinished ? "finished" : "playing", winner);
         } else {
+            // สลับตาเมื่อเปิดไม่เจอคู่
+            let nextTurn = currentTurn === 1 ? 2 : 1;
+            await syncToServer(gameCardsState, nextTurn, scores, "playing", "");
+            
             setTimeout(async () => {
                 activeFlipped[0].flipped = false;
                 activeFlipped[1].flipped = false;
-                currentTurn = currentTurn === 1 ? 2 : 1;
-                await syncToServer(gameCardsState, currentTurn, scores, "playing", "");
+                updateBoardStateLocally();
+                await syncToServer(gameCardsState, nextTurn, scores, "playing", "");
             }, 1000);
         }
     } else {
@@ -388,6 +425,7 @@ async function handleOnlineCardClick(index) {
 function updateBoardStateLocally() {
     gameCardsState.forEach((card, index) => {
         const cardEl = cardGrid.children[index];
+        if (!cardEl) return;
         if (card.flipped) cardEl.classList.add('flipped');
         else cardEl.classList.remove('flipped');
         if (card.matched) cardEl.classList.add('matched');
@@ -414,7 +452,7 @@ async function syncToServer(cards, turn, roomScores, status, winner) {
 }
 
 function updateTurnDisplay() {
-    if (currentTurn.toString() === myRole) {
+    if (currentTurn.toString() === myRole.toString()) {
         turnIndicator.innerText = "🎯 ตาของคุณ!";
         turnIndicator.className = "turn-indicator p1-turn";
     } else {
@@ -424,7 +462,7 @@ function updateTurnDisplay() {
 }
 
 function endGameUI(winner) {
-    clearInterval(pollInterval);
+    if (pollInterval) clearInterval(pollInterval);
     if (winner === "เสมอ") {
         winnerText.innerText = "🤝 เสมอกัน!";
     } else {
@@ -433,12 +471,3 @@ function endGameUI(winner) {
     finalScoreText.innerText = `คะแนน: ${playerXName} (${scores[1]}) - ${playerOName} (${scores[2]})`;
     gameMessage.classList.remove('hidden');
 }
-
-// รองรับการกดปุ่ม 'R', 'r' หรือ 'พ' บนคีย์บอร์ดเพื่อเริ่มใหม่
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'r' || e.key === 'R' || e.key === 'พ' || e.key === 'P') {
-        if (!gameArea.classList.contains('hidden')) {
-            restartGame();
-        }
-    }
-});

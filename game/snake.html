@@ -3,42 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>เกมงูกินจุด - MiniGameHub</title>
+    <title>เกมงูกินจุด — ArtCraft Arcade</title>
     <link rel="stylesheet" href="snake.css">
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="game-container">
-        <header class="game-header">
-            <a href="home.html" class="btn-back">⬅ กลับหน้าหลัก</a>
-            <h1>🐍 เกมงูกินจุด</h1>
-            <div class="score-board">คะแนน: <span id="score">0</span> | สูงสุด: <span id="highScore">0</span></div>
-        </header>
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
 
-        <div class="canvas-wrapper">
-            <canvas id="snakeCanvas" width="400" height="400"></canvas>
-            
-            <!-- หน้าต่างแสดงตอนจบเกม -->
-            <div id="gameMessage" class="game-message hidden">
-                <h2 id="messageText">GAME OVER</h2>
-                <p id="subMessageText" class="sub-message">กดปุ่ม R เพื่อเล่นใหม่</p>
-                <button id="restartBtn" class="btn-primary">เล่นอีกครั้ง</button>
+    <!-- Top Navigation Bar -->
+    <nav class="top-bar">
+        <a href="home.html" class="btn-back"><span>←</span> กลับสู่หน้าคอลเลกชัน</a>
+        <div class="top-brand">MINIGAMESEALION // ARCADE</div>
+    </nav>
+
+    <!-- Main Cockpit Layout -->
+    <main class="arcade-layout">
+        
+        <!-- ฝั่งซ้าย: จอเล่นเกมหลัก -->
+        <div class="canvas-stage">
+            <div class="stage-header">
+                <span class="live-indicator"><span class="dot"></span> LIVE SESSION</span>
+                <span class="stage-code">MODE: CLASSIC</span>
+            </div>
+
+            <div class="canvas-wrapper">
+                <canvas id="snakeCanvas" width="420" height="420"></canvas>
+                
+                <div id="gameMessage" class="game-message hidden">
+                    <h2 id="messageText">GAME OVER</h2>
+                    <p id="subMessageText" class="sub-message">กดปุ่ม R เพื่อเล่นใหม่</p>
+                    <button id="restartBtn" class="btn-primary">เล่นอีกครั้ง ↻</button>
+                </div>
+            </div>
+
+            <!-- ปุ่มควบคุมสำหรับมือถือ -->
+            <div class="touch-controls">
+                <div class="dpad-row">
+                    <button class="dpad-btn" id="btnUp">▲</button>
+                </div>
+                <div class="dpad-row">
+                    <button class="dpad-btn" id="btnLeft">◄</button>
+                    <button class="dpad-btn" id="btnDown">▼</button>
+                    <button class="dpad-btn" id="btnRight">►</button>
+                </div>
             </div>
         </div>
 
-        <!-- ปุ่มควบคุมสำหรับมือถือ (Touch D-Pad) -->
-        <div class="touch-controls">
-            <div class="dpad-row">
-                <button class="dpad-btn" id="btnUp">▲</button>
+        <!-- ฝั่งขวา: แผงข้อมูล คะแนน และวิธีเล่น -->
+        <aside class="side-panel">
+            <div class="panel-card title-card">
+                <span class="game-badge">ARCADE NO. 01</span>
+                <h1>🐍 เกมงูกินจุด</h1>
+                <p>ควบคุมงูเลื้อยเก็บจุดพลังงานสีแดง ระวังอย่าชนกำแพงหรือหางของตัวเอง</p>
             </div>
-            <div class="dpad-row">
-                <button class="dpad-btn" id="btnLeft">◄</button>
-                <button class="dpad-btn" id="btnDown">▼</button>
-                <button class="dpad-btn" id="btnRight">►</button>
+
+            <div class="score-grid">
+                <div class="score-box current">
+                    <span class="score-label">CURRENT SCORE</span>
+                    <strong id="score">0</strong>
+                </div>
+                <div class="score-box best">
+                    <span class="score-label">HIGH SCORE</span>
+                    <strong id="highScore">0</strong>
+                </div>
             </div>
-        </div>
-    </div>
+
+            <div class="panel-card controls-guide">
+                <h3>วิธีการควบคุม (CONTROLS)</h3>
+                <div class="key-row">
+                    <div class="key-caps">
+                        <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> หรือ <kbd>▲</kbd><kbd>▼</kbd><kbd>◄</kbd><kbd>►</kbd>
+                    </div>
+                    <span>เปลี่ยนทิศทาง</span>
+                </div>
+                <div class="key-row">
+                    <div class="key-caps"><kbd>R</kbd></div>
+                    <span>เริ่มเกมใหม่ทันที</span>
+                </div>
+            </div>
+        </aside>
+
+    </main>
 
     <script src="snake.js"></script>
 </body>

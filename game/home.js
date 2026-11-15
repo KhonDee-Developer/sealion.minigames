@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!isLoggedIn || isLoggedIn !== 'true') {
         alert('กรุณาเข้าสู่ระบบก่อนใช้งาน');
-        window.location.href = '../login/index.html';
+        window.location.href = '/index.html';
         return;
     }
 
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('currentUser');
             alert('ออกจากระบบเรียบร้อยแล้ว');
-            window.location.href = '../login/index.html';
+            window.location.href = '/index.html';
         });
     }
 
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gameCards.forEach(card => {
                 const cardCategory = card.getAttribute('data-category');
                 if (category === 'all' || cardCategory === category) {
-                    card.style.display = 'block';
+                    card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
                 }
@@ -51,26 +51,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // 4. ฟังก์ชันควบคุมการกดปุ่มเล่นเกม
 function playGame(gameName) {
-    if (gameName === 'Snake') {
-        window.location.href = 'snake.html'; // เปิดหน้าเกมงู
-    } else if (gameName === 'Tic-Tac-Toe') {
-        window.location.href = 'xo.html'; // เปิดหน้าเกม XO
-    } else if (gameName === 'Space Runner') {
-        window.location.href = 'space.html'; // เปิดหน้าเกม Space Runner
-    } else {
-        alert(`เกม ${gameName} กำลังอยู่ในช่วงพัฒนา!`);
-    }
-}
+    const gameRoutes = {
+        'Snake': 'snake.html',
+        'Tic-Tac-Toe': 'xo.html',
+        'Space Runner': 'space.html',
+        'Memory Match': 'memory.html',
+        'Chess': 'chess.html' // <-- เพิ่มลิงก์ไปยังหน้าเกมหมากรุกสากลตรงนี้
+    };
 
-function playGame(gameName) {
-    if (gameName === 'Snake') {
-        window.location.href = 'snake.html';
-    } else if (gameName === 'Tic-Tac-Toe') {
-        window.location.href = 'xo.html';
-    } else if (gameName === 'Space Runner') {
-        window.location.href = 'space.html';
-    } else if (gameName === 'Memory Match') {
-        window.location.href = 'memory.html'; // เพิ่มบรรทัดนี้
+    if (gameRoutes[gameName]) {
+        window.location.href = gameRoutes[gameName];
     } else {
         alert(`เกม ${gameName} กำลังอยู่ในช่วงพัฒนา!`);
     }

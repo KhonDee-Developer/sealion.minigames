@@ -3,80 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>เกม XO - MiniGameHub</title>
+    <title>XO (Tic-Tac-Toe) — ArtCraft Arcade</title>
     <link rel="stylesheet" href="xo.css">
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div class="game-container">
-        <!-- ส่วนหัวและปุ่มย้อนกลับ -->
-        <header class="game-header">
-            <a href="home.html" class="btn-back">⬅ กลับหน้าหลัก</a>
-            <h1>❌⭕ เกม XO มัลติเพลเยอร์</h1>
-        </header>
+    <!-- Ambient Background Glow -->
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+
+    <!-- Top Navigation Bar -->
+    <nav class="top-bar">
+        <a href="home.html" class="btn-back"><span>←</span> กลับสู่หน้าคอลเลกชัน</a>
+        <div class="top-brand">MINIGAMESEALION // MULTIPLAYER</div>
+    </nav>
+
+    <!-- Main Cockpit Layout -->
+    <main class="arcade-layout">
 
         <!-- 1. หน้าจอเลือกโหมดเกม -->
-        <div id="modeSelection" class="card-section">
-            <h2>เลือกโหมดการเล่น</h2>
+        <div id="modeSelection" class="panel-card mode-stage">
+            <div class="stage-header">
+                <span class="game-badge">PUZZLE NO. 02</span>
+                <span class="live-indicator"><span class="dot"></span> SELECT MODE</span>
+            </div>
+            <h1>เลือกโหมดการเล่น</h1>
+            <p class="section-desc">ท้าทายความคิดและประลองปัญญาในรูปแบบที่คุณต้องการ</p>
+            
             <div class="mode-buttons">
-                <button class="btn-mode bot" onclick="selectMode('bot')">
-                    <span class="icon">🤖</span> เล่นกับบอท (AI)
+                <button class="btn-mode" onclick="selectMode('bot')">
+                    <span class="icon">🤖</span>
+                    <div>
+                        <strong>เล่นกับบอท (AI)</strong>
+                        <span>ประลองสมองกับระบบอัจฉริยะ</span>
+                    </div>
                 </button>
-                <button class="btn-mode local" onclick="selectMode('local')">
-                    <span class="icon">👥</span> เล่น 2 คน (เครื่องเดียวกัน)
+                <button class="btn-mode" onclick="selectMode('local')">
+                    <span class="icon">👥</span>
+                    <div>
+                        <strong>เล่น 2 คน (เครื่องเดียวกัน)</strong>
+                        <span>ผลัดกันเล่นบนอุปกรณ์เดียวกัน</span>
+                    </div>
                 </button>
-                <button class="btn-mode online" onclick="selectMode('online')">
-                    <span class="icon">🌐</span> เล่นออนไลน์ (หลายเครื่อง)
+                <button class="btn-mode" onclick="selectMode('online')">
+                    <span class="icon">🌐</span>
+                    <div>
+                        <strong>เล่นออนไลน์ (หลายเครื่อง)</strong>
+                        <span>สร้างห้องหรือใส่รหัสเพื่อท้าดวลเพื่อน</span>
+                    </div>
                 </button>
             </div>
         </div>
 
         <!-- 2. หน้าจอห้องออนไลน์ -->
-        <div id="onlineLobby" class="card-section hidden">
-            <h2>🌐 ห้องเกมออนไลน์</h2>
+        <div id="onlineLobby" class="panel-card mode-stage hidden">
+            <div class="stage-header">
+                <span class="game-badge">ONLINE LOBBY</span>
+                <span class="live-indicator"><span class="dot"></span> NETWORK</span>
+            </div>
+            <h1>🌐 ห้องเกมออนไลน์</h1>
+            <p class="section-desc">สร้างห้องใหม่เพื่อรับรหัส หรือกรอกรหัส 8 หลักเพื่อเข้าร่วมกับเพื่อน</p>
+            
             <div class="lobby-box">
                 <button class="btn-primary glow" onclick="createOnlineRoom()">✨ สร้างห้องใหม่</button>
-                <div class="divider"><span>หรือ</span></div>
+                <div class="divider"><span>หรือเชื่อมต่อด้วยรหัส</span></div>
                 <div class="join-group">
-                    <input type="text" id="roomIdInput" placeholder="กรอกรหัสห้อง 8 หลัก" maxlength="8">
+                    <input type="text" id="roomIdInput" placeholder="รหัส 8 หลัก" maxlength="8">
                     <button class="btn-secondary" onclick="joinOnlineRoom()">เข้าร่วม</button>
                 </div>
             </div>
+
             <div id="roomInfoBox" class="room-info hidden">
                 <p>รหัสห้องของคุณ:</p>
                 <h3 id="displayRoomId">--------</h3>
                 <span id="roomStatusText" class="pulse-text">⏳ กำลังรอผู้เล่นคนที่ 2 เข้าห้อง...</span>
             </div>
+
             <button class="btn-back-mode" onclick="backToMenu()">⬅ กลับไปหน้าเลือกโหมด</button>
         </div>
 
-        <!-- 3. กระดานเกมหลัก -->
-        <div id="gameArea" class="card-section hidden">
-            <div class="status-board" id="statusText">ตาของ: <span class="player-x">ผู้เล่น X</span></div>
-            
-            <div class="board" id="board">
-                <button class="cell" data-index="0"></button>
-                <button class="cell" data-index="1"></button>
-                <button class="cell" data-index="2"></button>
-                <button class="cell" data-index="3"></button>
-                <button class="cell" data-index="4"></button>
-                <button class="cell" data-index="5"></button>
-                <button class="cell" data-index="6"></button>
-                <button class="cell" data-index="7"></button>
-                <button class="cell" data-index="8"></button>
+        <!-- 3. กระดานเกมหลัก (แสดงเมื่อเลือกโหมดแล้ว) -->
+        <div id="gameArea" class="panel-card game-stage hidden">
+            <div class="stage-header">
+                <span class="game-badge">MATCH IN PROGRESS</span>
+                <span class="stage-code" id="statusText">ตาของ: <span class="player-x">ผู้เล่น X</span></span>
             </div>
 
-            <button class="btn-secondary" onclick="backToMenu()" style="width: 100%; margin-top: 15px;">🏠 ออกไปหน้าเลือกโหมด</button>
+            <div class="board-wrapper">
+                <div class="board" id="board">
+                    <button class="cell" data-index="0"></button>
+                    <button class="cell" data-index="1"></button>
+                    <button class="cell" data-index="2"></button>
+                    <button class="cell" data-index="3"></button>
+                    <button class="cell" data-index="4"></button>
+                    <button class="cell" data-index="5"></button>
+                    <button class="cell" data-index="6"></button>
+                    <button class="cell" data-index="7"></button>
+                    <button class="cell" data-index="8"></button>
+                </div>
+            </div>
+
+            <button class="btn-secondary" onclick="backToMenu()" style="width: 100%; margin-top: 1.2rem;">🏠 ออกไปหน้าเลือกโหมด</button>
         </div>
 
-        <!-- หน้าต่างจบเกม -->
-        <div id="gameMessage" class="game-message hidden">
-            <div class="message-card">
-                <h2 id="messageText">X เป็นฝ่ายชนะ!</h2>
-                <p class="sub-message">กดปุ่ม R (หรือ พ) เพื่อเล่นใหม่</p>
-                <button id="restartBtn" class="btn-primary">เล่นอีกครั้ง</button>
+        <!-- ฝั่งขวา: แผงข้อมูลและกฎกติกา -->
+        <aside class="side-panel">
+            <div class="panel-card title-card">
+                <span class="game-badge">PUZZLE NO. 02</span>
+                <h1>❌⭕ XO (Tic-Tac-Toe)</h1>
+                <p>เกมกลยุทธ์คลาสสิก เรียงสัญลักษณ์ 3 ช่องต่อกันในแนวตั้ง แนวนอน หรือแนวทแยงเพื่อเป็นผู้ชนะ</p>
             </div>
+
+            <div class="panel-card controls-guide">
+                <h3>วิธีการเล่น (RULES)</h3>
+                <div class="rule-row">
+                    <span>1. ผู้เล่นผลัดกันวางเครื่องหมาย X และ O ลงบนกระดาน 3x3</span>
+                </div>
+                <div class="rule-row">
+                    <span>2. ใครสามารถเรียงสัญลักษณ์ของตัวเองต่อติดกัน 3 ช่องก่อนจะเป็นผู้ชนะ</span>
+                </div>
+                <div class="rule-row">
+                    <span>3. หากไม่มีใครเรียงครบ 3 ช่อง เกมจะถือว่าเสมอกัน</span>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- หน้าต่างจบเกม -->
+    <div id="gameMessage" class="game-message hidden">
+        <div class="message-card">
+            <h2 id="messageText">X เป็นฝ่ายชนะ!</h2>
+            <p class="sub-message">กดปุ่มเล่นใหม่อีกครั้งเพื่อเริ่มดวลตาถัดไป</p>
+            <button id="restartBtn" class="btn-primary">เล่นอีกครั้ง ↻</button>
         </div>
     </div>
 
