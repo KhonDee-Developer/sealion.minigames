@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const LOGIN_PAGE_URL = '../login/index.html';
+    const LOGIN_PAGE_URL = '../index.html';
 
     // 1. ตรวจสอบสถานะการเข้าสู่ระบบ
     const isLoggedIn = localStorage.getItem('isLoggedIn');
