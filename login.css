@@ -1,99 +1,434 @@
+:root {
+  --bg-page: #161615;
+  --bg-surface: #1f1f1d;
+  --bg-subtle: #292926;
+  --text-primary: #f3f2ed;
+  --text-secondary: #b8b6ae;
+  --text-muted: #8e8c84;
+  --border-color: #383834;
+  --border-focus: #f3f2ed;
+  --accent-primary: #f3f2ed;
+  --accent-hover: #dcdad2;
+  --accent-orange: #f06d3b;
+
+  --status-error-bg: rgba(239, 68, 68, 0.14);
+  --status-error-border: rgba(248, 113, 113, 0.4);
+  --status-error-text: #fca5a5;
+
+  --status-success-bg: rgba(34, 197, 94, 0.14);
+  --status-success-border: rgba(74, 222, 128, 0.4);
+  --status-success-text: #86efac;
+
+  --status-info-bg: rgba(59, 130, 246, 0.14);
+  --status-info-border: rgba(96, 165, 250, 0.4);
+  --status-info-text: #93c5fd;
+
+  --font-sans: 'Inter', 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
-  background-color: #f0f2f5;
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+.bg-grid {
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(243, 242, 237, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(243, 242, 237, 0.035) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* แถบด้านบน */
+.top-nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 32px;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(22, 22, 21, 0.9);
+  backdrop-filter: blur(8px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+}
+
+.brand-dot {
+  width: 10px;
+  height: 10px;
+  background-color: var(--accent-orange);
+  border-radius: 2px;
+}
+
+.system-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  padding: 5px 11px;
+  border-radius: 999px;
+}
+
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  background-color: #4ade80;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.16);
+}
+
+/* พื้นที่ตรงกลาง */
+.main-container {
+  position: relative;
+  z-index: 10;
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  padding: 32px 16px;
 }
 
+/* การ์ดล็อกอิน */
 .login-card {
-  background: #ffffff;
-  padding: 30px 40px;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 36px;
   width: 100%;
-  max-width: 360px;
+  max-width: 420px;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.55);
 }
 
-h2 {
-  text-align: center;
+.card-header {
   margin-bottom: 24px;
-  color: #333333;
 }
 
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--accent-orange);
+  margin-bottom: 8px;
+}
+
+h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* แถบสลับโหมด Tab */
+.mode-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--bg-subtle);
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 24px;
+  border: 1px solid var(--border-color);
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 12px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn:hover {
+  color: var(--text-primary);
+}
+
+.tab-btn.active {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* ช่องกรอกข้อมูล */
 .input-group {
   margin-bottom: 18px;
 }
 
-.input-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-size: 14px;
-  color: #666666;
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 7px;
 }
 
-.input-group input {
+.label-row label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.mono-hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 13px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+.input-wrapper input {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #cccccc;
-  border-radius: 6px;
+  padding: 11px 40px 11px 38px;
+  background: var(--bg-page);
+  border: 1px solid var(--border-color);
+  border-radius: 9px;
+  font-family: var(--font-sans);
   font-size: 14px;
+  color: var(--text-primary);
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
-.input-group input:focus {
-  border-color: #4285f4;
+.input-wrapper input::placeholder {
+  color: var(--text-muted);
 }
 
+.input-wrapper input:focus {
+  background: var(--bg-subtle);
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(243, 242, 237, 0.1);
+}
+
+.input-wrapper:focus-within .input-icon {
+  color: var(--text-primary);
+}
+
+/* ปุ่มเปิด/ปิดรหัสผ่าน */
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.toggle-password:hover {
+  color: var(--text-primary);
+  background: rgba(243, 242, 237, 0.08);
+}
+
+.toggle-password svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* กล่องแจ้งเตือนสถานะ */
+.status-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 14px;
+  border-radius: 9px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 18px;
+  border: 1px solid transparent;
+  animation: fadeIn 0.2s ease;
+}
+
+.status-box.hidden {
+  display: none;
+}
+
+.status-box.error {
+  background: var(--status-error-bg);
+  border-color: var(--status-error-border);
+  color: var(--status-error-text);
+}
+
+.status-box.success {
+  background: var(--status-success-bg);
+  border-color: var(--status-success-border);
+  color: var(--status-success-text);
+}
+
+.status-box.info {
+  background: var(--status-info-bg);
+  border-color: var(--status-info-border);
+  color: var(--status-info-text);
+}
+
+/* ปุ่มกดหลัก */
 .btn {
   width: 100%;
-  padding: 12px;
+  padding: 12px 18px;
   border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: bold;
+  border-radius: 9px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
 }
 
 .btn-primary {
-  background-color: #4285f4;
-  color: #ffffff;
+  background-color: var(--accent-primary);
+  color: var(--bg-page);
 }
 
-.btn-primary:hover {
-  background-color: #357ae8;
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
-.toggle-mode {
+.btn-primary:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.arrow-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) .arrow-icon {
+  transform: translateX(3px);
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(22, 22, 21, 0.25);
+  border-top-color: var(--bg-page);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ส่วนท้ายการ์ด */
+.card-footer {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-color);
   text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
-  color: #666666;
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 
-.toggle-mode a {
-  color: #4285f4;
+.card-footer a {
+  color: var(--text-primary);
   text-decoration: none;
-  font-weight: bold;
-  margin-left: 5px;
+  font-weight: 600;
+  margin-left: 6px;
+  border-bottom: 1.5px solid var(--text-primary);
+  padding-bottom: 1px;
+  transition: color 0.2s, border-color 0.2s;
 }
 
-.toggle-mode a:hover {
-  text-decoration: underline;
+.card-footer a:hover {
+  color: var(--accent-orange);
+  border-color: var(--accent-orange);
 }
 
-#statusMessage {
-  margin-top: 15px;
+/* Footer ล่างสุด */
+.bottom-footer {
+  position: relative;
+  z-index: 10;
   text-align: center;
-  font-size: 14px;
-  min-height: 20px;
+  padding: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .top-nav { padding: 16px 20px; }
+  .login-card { padding: 28px 22px; }
 }

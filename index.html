@@ -3,35 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบเข้าสู่ระบบ / ลงทะเบียน</title>
+  <title>เข้าสู่ระบบ / ลงทะเบียน — Workspace Portal</title>
+  <!-- โหลดฟอนต์สไตล์ ArtCraft (Sans + Mono + Thai) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="login.css">
 </head>
 <body>
 
-  <div class="login-card">
-    <h2 id="formTitle">เข้าสู่ระบบ</h2>
-    
-    <form id="authForm">
-      <div class="input-group">
-        <label for="username">ชื่อผู้ใช้ (ID)</label>
-        <input type="text" id="username" placeholder="กรอกชื่อผู้ใช้" required>
-      </div>
+  <!-- พื้นหลังตาราง Grid สไตล์ Studio -->
+  <div class="bg-grid"></div>
 
-      <div class="input-group">
-        <label for="password">รหัสผ่าน</label>
-        <input type="password" id="password" placeholder="กรอกรหัสผ่าน" required>
-      </div>
-
-      <button type="submit" id="submitBtn" class="btn btn-primary">เข้าสู่ระบบ</button>
-    </form>
-
-    <div class="toggle-mode">
-      <span id="toggleText">ยังไม่มีบัญชีใช่ไหม?</span>
-      <a href="#" id="toggleBtn">สมัครสมาชิกใหม่</a>
+  <!-- แถบเมนูด้านบนสไตล์ ArtCraft -->
+  <header class="top-nav">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span class="brand-name">CRAFT PORTAL</span>
     </div>
+    <div class="system-badge">
+      <span class="pulse-dot"></span>
+      <span>SYSTEM READY</span>
+    </div>
+  </header>
 
-    <div id="statusMessage"></div>
-  </div>
+  <!-- ส่วนเนื้อหาหลัก -->
+  <main class="main-container">
+    <div class="login-card">
+      <!-- หัวข้อสไตล์ Editorial มีเลขกำกับ -->
+      <div class="card-header">
+        <div class="eyebrow" id="eyebrowText">01 / AUTHENTICATION</div>
+        <h1 id="formTitle">เข้าสู่ระบบ</h1>
+        <p class="subtitle" id="formSubtitle">ยืนยันตัวตนเพื่อเข้าถึงพื้นที่ทำงานและระบบเกมของคุณ</p>
+      </div>
+
+      <!-- แถบสลับโหมดแบบ Tab Pill -->
+      <div class="mode-tabs">
+        <button type="button" class="tab-btn active" id="tabLogin">เข้าสู่ระบบ</button>
+        <button type="button" class="tab-btn" id="tabRegister">สมัครสมาชิกใหม่</button>
+      </div>
+      
+      <form id="authForm" novalidate>
+        <div class="input-group">
+          <div class="label-row">
+            <label for="username">ชื่อผู้ใช้ (ID)</label>
+            <span class="mono-hint">REQUIRED</span>
+          </div>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <input type="text" id="username" placeholder="ระบุชื่อผู้ใช้งานของคุณ" autocomplete="username" required>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="label-row">
+            <label for="password">รหัสผ่าน</label>
+            <span class="mono-hint">MIN 4 CHARS</span>
+          </div>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            <input type="password" id="password" placeholder="ระบุรหัสผ่าน" autocomplete="current-password" required>
+            <button type="button" class="toggle-password" id="togglePasswordBtn" aria-label="แสดงหรือซ่อนรหัสผ่าน">
+              <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- กล่องแสดงสถานะ (Alert Banner) -->
+        <div id="statusBox" class="status-box hidden" role="alert">
+          <span id="statusIcon" class="status-icon"></span>
+          <span id="statusMessage"></span>
+        </div>
+
+        <button type="submit" id="submitBtn" class="btn btn-primary">
+          <span class="btn-text" id="btnText">เข้าสู่ระบบ</span>
+          <span class="spinner hidden" id="btnSpinner"></span>
+          <svg class="arrow-icon" id="btnArrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+      </form>
+
+      <div class="card-footer">
+        <span id="toggleText">ยังไม่มีบัญชีใช่ไหม?</span>
+        <a href="#" id="toggleBtn">สร้างบัญชีใหม่ →</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bottom-footer">
+    <span>SECURE GATEWAY · GOOGLE APPS SCRIPT BACKEND</span>
+  </footer>
 
   <script src="login.js"></script>
 </body>
