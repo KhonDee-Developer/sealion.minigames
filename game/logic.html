@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Gate — MiniGameSeaLion Craft</title>
+    <link rel="stylesheet" href="logic.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="bg-grid" aria-hidden="true"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="top-bar">
+        <a href="home.html" class="btn-back">
+            <span>←</span>
+            <span>กลับสู่คอลเลกชัน</span>
+        </a>
+
+        <!-- ช่องเซฟ 5 ช่อง -->
+        <div class="save-slots-bar">
+            <span class="save-label">SAVE SLOTS:</span>
+            <div class="slot-group" data-slot="1">
+                <button type="button" class="slot-load" title="โหลดช่องที่ 1">1</button>
+                <button type="button" class="slot-save" title="บันทึกลงช่องที่ 1">💾</button>
+            </div>
+            <div class="slot-group" data-slot="2">
+                <button type="button" class="slot-load" title="โหลดช่องที่ 2">2</button>
+                <button type="button" class="slot-save" title="บันทึกลงช่องที่ 2">💾</button>
+            </div>
+            <div class="slot-group" data-slot="3">
+                <button type="button" class="slot-load" title="โหลดช่องที่ 3">3</button>
+                <button type="button" class="slot-save" title="บันทึกลงช่องที่ 3">💾</button>
+            </div>
+            <div class="slot-group" data-slot="4">
+                <button type="button" class="slot-load" title="โหลดช่องที่ 4">4</button>
+                <button type="button" class="slot-save" title="บันทึกลงช่องที่ 4">💾</button>
+            </div>
+            <div class="slot-group" data-slot="5">
+                <button type="button" class="slot-load" title="โหลดช่องที่ 5">5</button>
+                <button type="button" class="slot-save" title="บันทึกลงช่องที่ 5">💾</button>
+            </div>
+        </div>
+
+        <!-- เครื่องมือจัดการจำนวนมาก -->
+        <div class="batch-actions">
+            <span id="selectedCount" class="selected-badge">เลือก: 0</span>
+            <label class="dup-count-label">
+                ชุด:
+                <input type="number" id="dupCountInput" class="dup-count-input" min="1" max="50" value="1" title="จำนวนชุดที่ต้องการทำซ้ำ">
+            </label>
+            <button type="button" id="duplicateBtn" class="btn-action" title="ทำซ้ำอุปกรณ์ที่เลือก (Ctrl+D)">ทำซ้ำ ⧉</button>
+            <button type="button" id="deleteSelectedBtn" class="btn-danger-soft" title="ลบอุปกรณ์ที่เลือก (Delete)">ลบที่เลือก ✕</button>
+        </div>
+
+        <div class="top-actions">
+            <span id="saveToast" class="save-toast">บันทึกแล้ว!</span>
+            <button type="button" id="clearBtn" class="btn-danger">ล้างกระดาน 🗑️</button>
+        </div>
+    </header>
+
+    <!-- Main Workbench (Canvas ซ้าย / Menu ขวา) -->
+    <main class="sandbox-layout">
+
+        <!-- Left Canvas: พื้นที่ต่อวงจร -->
+        <section class="board-stage">
+            <div class="stage-hud">
+                <span class="hud-status"><span class="dot"></span> SIMULATION ACTIVE</span>
+                <span id="statsText" class="hud-stats">NODES: 0 | WIRES: 0</span>
+                <div class="zoom-controls">
+                    <button type="button" id="zoomOutBtn" class="zoom-btn" title="ซูมออก">-</button>
+                    <button type="button" id="zoomResetBtn" class="zoom-btn zoom-pct" title="รีเซ็ตมุมมอง (100%)">100%</button>
+                    <button type="button" id="zoomInBtn" class="zoom-btn" title="ซูมเข้า">+</button>
+                </div>
+            </div>
+            <div class="canvas-container" id="canvasContainer">
+                <canvas id="logicCanvas"></canvas>
+            </div>
+        </section>
+
+        <!-- Right Toolbar: อุปกรณ์ Logic Gates -->
+        <aside class="palette-panel">
+            <div class="panel-header">
+                <span class="panel-eyebrow">CRAFT SANDBOX // LOGIC</span>
+                <h2>⚡ Logic Gate</h2>
+                <p>คลิกเลือกอุปกรณ์เพื่อวางลงบนกระดาน</p>
+            </div>
+
+            <!-- หมวด INPUT -->
+            <div class="component-group">
+                <span class="group-label">INPUT</span>
+                <button type="button" class="comp-btn" data-type="SWITCH">
+                    <span class="comp-icon">🔘</span>
+                    <div class="comp-meta">
+                        <strong>SWITCH</strong>
+                        <small>สวิตช์กดสลับสถานะค้าง (0 / 1)</small>
+                    </div>
+                </button>
+                <button type="button" class="comp-btn" data-type="BUTTON">
+                    <span class="comp-icon">⏺️</span>
+                    <div class="comp-meta">
+                        <strong>PUSH BUTTON</strong>
+                        <small>ปุ่มกดชั่วขณะ (กดค้างติด ปล่อยดับ)</small>
+                    </div>
+                </button>
+                <button type="button" class="comp-btn" data-type="CLOCK">
+                    <span class="comp-icon">⏱️</span>
+                    <div class="comp-meta">
+                        <strong>CLOCK</strong>
+                        <small>สัญญาณนาฬิกา (ดับเบิลคลิกเพื่อตั้งเวลา)</small>
+                    </div>
+                </button>
+            </div>
+
+            <!-- หมวด OUTPUT -->
+            <div class="component-group">
+                <span class="group-label">OUTPUT</span>
+                <button type="button" class="comp-btn" data-type="LED">
+                    <span class="comp-icon">💡</span>
+                    <div class="comp-meta">
+                        <strong>LED</strong>
+                        <small>หลอดไฟแสดงผลลัพธ์</small>
+                    </div>
+                </button>
+            </div>
+
+            <!-- หมวด LOGIC GATES -->
+            <div class="component-group">
+                <span class="group-label">LOGIC GATES</span>
+                <div class="gate-grid">
+                    <button type="button" class="comp-btn gate-item" data-type="AND"><strong>AND</strong><small>และ</small></button>
+                    <button type="button" class="comp-btn gate-item" data-type="OR"><strong>OR</strong><small>หรือ</small></button>
+                    <button type="button" class="comp-btn gate-item" data-type="NOT"><strong>NOT</strong><small>นิเสธ</small></button>
+                    <button type="button" class="comp-btn gate-item" data-type="NAND"><strong>NAND</strong><small>ไม่และ</small></button>
+                    <button type="button" class="comp-btn gate-item" data-type="NOR"><strong>NOR</strong><small>ไม่หรือ</small></button>
+                    <button type="button" class="comp-btn gate-item" data-type="XOR"><strong>XOR</strong><small>เฉพาะหรือ</small></button>
+                </div>
+            </div>
+
+            <div class="help-box">
+                <h3>วิธีใช้งานด่วน</h3>
+                <ul>
+                    <li><strong>ต่อสายไฟ:</strong> ลากจากจุด Output (ขวา) ไปยังจุด Input (ซ้าย) / คลิกขวาที่จุดหรือโหนดเพื่อลบ</li>
+                    <li><strong>เลื่อน/ซูมกระดาน:</strong> หมุนล้อเมาส์ซูม / กด <code>Space</code> ค้างหรือคลิกกลางเมาส์ลาก</li>
+                    <li><strong>เลือก/ทำซ้ำ/ลบ:</strong> ลากคลุมหรือ <code>Shift</code>+คลิก | <code>Ctrl+D</code> ทำซ้ำ | <code>Delete</code> ลบ</li>
+                </ul>
+            </div>
+        </aside>
+
+    </main>
+
+    <script src="logic.js"></script>
+</body>
+</html>

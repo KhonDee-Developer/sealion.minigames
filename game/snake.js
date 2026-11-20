@@ -49,16 +49,36 @@ function gameLoop() {
 }
 
 function clearCanvas() {
-    ctx.fillStyle = "#020617";
+    ctx.fillStyle = "#121210";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.strokeStyle = "rgba(243, 242, 237, 0.045)";
+    ctx.lineWidth = 1;
+    for (let x = 0; x <= canvas.width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+    }
+    for (let y = 0; y <= canvas.height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
 }
 
 function drawSnake() {
     snake.forEach((part, index) => {
-        ctx.fillStyle = index === 0 ? "#4ade80" : "#22c55e";
-        ctx.strokeStyle = "#020617";
-        ctx.fillRect(part.x, part.y, gridSize, gridSize);
-        ctx.strokeRect(part.x, part.y, gridSize, gridSize);
+        ctx.fillStyle = index === 0 ? "#f3f2ed" : "#4ade80";
+        ctx.strokeStyle = "#121210";
+        ctx.lineWidth = 2;
+
+        const pad = 1;
+        ctx.beginPath();
+        ctx.roundRect(part.x + pad, part.y + pad, gridSize - pad * 2, gridSize - pad * 2, 4);
+        ctx.fill();
+        ctx.stroke();
     });
 }
 
@@ -96,9 +116,9 @@ function createFood() {
 }
 
 function drawFood() {
-    ctx.fillStyle = "#f43f5e";
+    ctx.fillStyle = "#f06d3b";
     ctx.beginPath();
-    ctx.arc(food.x + gridSize / 2, food.y + gridSize / 2, gridSize / 2 - 2, 0, 2 * Math.PI);
+    ctx.arc(food.x + gridSize / 2, food.y + gridSize / 2, gridSize / 2 - 3, 0, 2 * Math.PI);
     ctx.fill();
 }
 

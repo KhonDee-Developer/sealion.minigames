@@ -17,9 +17,9 @@ const finalScoreText = document.getElementById('finalScoreText');
 const bestRecordText = document.getElementById('bestRecordText');
 const bestRecordBanner = document.getElementById('bestRecordBanner');
 
-let currentMode = ""; 
+let currentMode = "";
 let currentRoomId = null;
-let myRole = null; 
+let myRole = null;
 let pollInterval = null;
 let isSyncing = false;
 
@@ -61,7 +61,7 @@ function selectMode(mode) {
 function backToMenu() {
     if (pollInterval) clearInterval(pollInterval);
     if (singleTimerInterval) clearInterval(singleTimerInterval);
-    
+
     gameMessage.classList.add('hidden');
     gameArea.classList.add('hidden');
     onlineLobby.classList.add('hidden');
@@ -79,7 +79,7 @@ function restartGame() {
     if (currentMode === 'single') {
         initSinglePlayerGame();
     } else if (currentMode === 'online') {
-        alert("โหมดออนไลน์: กรุณาสร้างห้องใหม่หรือติดต่อเพื่อนเพื่อเริ่มเกมใหม่ร่วมกัน");
+        showToast("โหมดออนไลน์: กรุณาสร้างห้องใหม่หรือติดต่อเพื่อนเพื่อเริ่มเกมใหม่ร่วมกัน");
         backToMenu();
     }
 }
@@ -99,7 +99,7 @@ function updateLiveBestRecordDisplay() {
 function checkAndUpdateBestRecord(time, flips) {
     const bestFlips = localStorage.getItem('memoryBestFlips');
     const bestTime = localStorage.getItem('memoryBestTime');
-    
+
     let isNewRecord = false;
 
     if (!bestFlips || flips < parseInt(bestFlips) || (flips === parseInt(bestFlips) && time < parseInt(bestTime))) {
@@ -138,7 +138,7 @@ function initSinglePlayerGame() {
         card.dataset.icon = icon;
 
         card.innerHTML = `
-            <div class="card-face card-front">❓</div>
+            <div class="card-face card-front">?</div>
             <div class="card-face card-back">${icon}</div>
         `;
 
@@ -169,9 +169,9 @@ function initSinglePlayerGame() {
 
                     if (matchedPairs === icons.length) {
                         clearInterval(singleTimerInterval);
-                        
+
                         const isNewRecord = checkAndUpdateBestRecord(singleTimer, singleFlipCount);
-                        
+
                         if (isNewRecord) {
                             winnerText.innerText = "🏆 สถิติใหม่! ยินดีด้วย";
                         } else {
@@ -207,7 +207,7 @@ async function createOnlineRoom() {
     try {
         let cardsData = [...icons, ...icons];
         cardsData.sort(() => Math.random() - 0.5);
-        
+
         const initialCards = cardsData.map((icon, index) => ({
             id: index,
             icon: icon,
@@ -217,8 +217,8 @@ async function createOnlineRoom() {
 
         const res = await fetch(GAS_URL, {
             method: "POST",
-            body: JSON.stringify({ 
-                action: "createRoom", 
+            body: JSON.stringify({
+                action: "createRoom",
                 playerEmail: user,
                 cards: initialCards,
                 scores: { 1: 0, 2: 0 },
@@ -233,17 +233,17 @@ async function createOnlineRoom() {
             roomStatusText.innerText = "⏳ รอผู้เล่นคนที่ 2 กรอกรหัสเข้ามา...";
             startPolling();
         } else {
-            alert(result.message || "ไม่สามารถสร้างห้องได้");
+            showToast(result.message || "ไม่สามารถสร้างห้องได้");
         }
     } catch (e) {
-        alert("เกิดข้อผิดพลาดในการสร้างห้อง");
+        showToast("เกิดข้อผิดพลาดในการสร้างห้อง");
     }
 }
 
 async function joinOnlineRoom() {
     const roomId = roomIdInput.value.trim().toUpperCase();
     if (roomId.length !== 8) {
-        alert("กรุณากรอกรหัสห้องให้ครบ 8 หลัก");
+        showToast("กรุณากรอกรหัสห้องให้ครบ 8 หลัก");
         return;
     }
 
@@ -264,10 +264,10 @@ async function joinOnlineRoom() {
             bestRecordBanner.classList.add('hidden');
             startPolling();
         } else {
-            alert(result.message || "เข้าร่วมห้องไม่สำเร็จ");
+            showToast(result.message || "เข้าร่วมห้องไม่สำเร็จ");
         }
     } catch (e) {
-        alert("เชื่อมต่อห้องไม่สำเร็จ");
+        showToast("เชื่อมต่อห้องไม่สำเร็จ");
     }
 }
 
@@ -287,7 +287,7 @@ function startPolling() {
             if (data.status === "success") {
                 if (data.playerX) playerXName = data.playerX;
                 if (data.playerO) playerOName = data.playerO || "รอผู้เล่น...";
-                
+
                 turnIndicator.classList.remove('hidden');
                 scoreBoardContainer.innerHTML = `<span id="p1Label">${playerXName}: <strong id="p1Score">${data.scores ? data.scores[1] : 0}</strong> คู่</span> | <span id="p2Label">${playerOName}: <strong id="p2Score">${data.scores ? data.scores[2] : 0}</strong> คู่</span>`;
 
@@ -348,7 +348,7 @@ function initOnlineBoard(cardsArray) {
         if (card.matched) cardEl.classList.add('matched');
 
         cardEl.innerHTML = `
-            <div class="card-face card-front">❓</div>
+            <div class="card-face card-front">?</div>
             <div class="card-face card-back">${card.icon}</div>
         `;
         cardEl.addEventListener('click', () => handleOnlineCardClick(index));
@@ -378,7 +378,7 @@ function updateBoardState(serverCards) {
 
 async function handleOnlineCardClick(index) {
     if (currentTurn.toString() !== myRole.toString()) {
-        alert("ยังไม่ใช่ตาของคุณ!");
+        showToast("ยังไม่ใช่ตาของคุณ!");
         return;
     }
 
@@ -395,7 +395,7 @@ async function handleOnlineCardClick(index) {
             activeFlipped[0].matched = true;
             activeFlipped[1].matched = true;
             scores[myRole]++;
-            
+
             let isFinished = gameCardsState.every(c => c.matched);
             let winner = "";
             if (isFinished) {
@@ -406,10 +406,9 @@ async function handleOnlineCardClick(index) {
 
             await syncToServer(gameCardsState, currentTurn, scores, isFinished ? "finished" : "playing", winner);
         } else {
-            // สลับตาเมื่อเปิดไม่เจอคู่
             let nextTurn = currentTurn === 1 ? 2 : 1;
             await syncToServer(gameCardsState, nextTurn, scores, "playing", "");
-            
+
             setTimeout(async () => {
                 activeFlipped[0].flipped = false;
                 activeFlipped[1].flipped = false;
@@ -470,4 +469,23 @@ function endGameUI(winner) {
     }
     finalScoreText.innerText = `คะแนน: ${playerXName} (${scores[1]}) - ${playerOName} (${scores[2]})`;
     gameMessage.classList.remove('hidden');
+}
+
+let toastTimer;
+function showToast(message) {
+    let toast = document.getElementById('craftToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'craftToast';
+        toast.className = 'craft-toast';
+        document.body.appendChild(toast);
+    }
+
+    toast.textContent = message;
+    toast.classList.add('show');
+
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2400);
 }

@@ -8,7 +8,7 @@ var moveHistoryEl = document.getElementById('moveHistory');
 
 var selectedSquare = null;
 
-// --- ระบบเสียงใหม่ที่ดังขึ้นและเสถียรขึ้น ---
+// --- ระบบเสียง ---
 let audioCtx = null;
 
 function playAudioFromUrl(url) {
@@ -25,25 +25,23 @@ function playAudioFromUrl(url) {
             .then(decodedAudio => {
                 let source = audioCtx.createBufferSource();
                 source.buffer = decodedAudio;
-                
-                // เพิ่มความดังเสียง 3 เท่า
+
                 let gainNode = audioCtx.createGain();
-                gainNode.gain.value = 3.0; 
+                gainNode.gain.value = 3.0;
 
                 source.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
                 source.start(0);
             })
-            .catch(e => {
-                // สำรองกรณี fetch ไม่ผ่าน ใช้ Audio ปกติและเร่งเสียงสุด
+            .catch(() => {
                 let fallbackAudio = new Audio(url);
                 fallbackAudio.volume = 1.0;
-                fallbackAudio.play().catch(err => {});
+                fallbackAudio.play().catch(() => {});
             });
     } catch (e) {
         let fallbackAudio = new Audio(url);
         fallbackAudio.volume = 1.0;
-        fallbackAudio.play().catch(err => {});
+        fallbackAudio.play().catch(() => {});
     }
 }
 
@@ -79,7 +77,15 @@ function greySquare(square) {
     $square.addClass('highlight-square');
 }
 
-// ไฮไลต์ช่องคิงสีแดงเมื่อโดนรุก
+function showLegalMovesForSquare(square) {
+    greySquare(square);
+    var moves = game.moves({ square: square, verbose: true });
+    for (var i = 0; i < moves.length; i++) {
+        greySquare(moves[i].to);
+    }
+}
+
+// ไฮไลต์ช่องคิงเมื่อโดนรุก
 function highlightCheck() {
     $('#board .square-55d63').removeClass('in-check-square');
     if (game.in_check()) {
@@ -150,7 +156,7 @@ function updateStatus() {
     } else {
         status = 'ตาของ: ' + moveColor;
         if (game.in_check()) {
-            status += ' <span style="color: #fb7185; font-weight: bold;">(⚠️ โดนรุก!)</span>';
+            status += ' <span style="color: #fda4af; font-weight: 700;">(⚠️ โดนรุก!)</span>';
         }
     }
     statusEl.innerHTML = status;
@@ -158,24 +164,17 @@ function updateStatus() {
     updateMoveHistory();
 }
 
-// --- แก้ไขระบบคลิกเดิน (Click-to-Move) ให้ทำงานได้สมบูรณ์ ---
+// --- ระบบคลิกเดิน (Click-to-Move) ---
 function handleSquareClick(square) {
     if (game.game_over()) return;
 
-    // หากยังไม่ได้เลือกตัวหมาก
     if (!selectedSquare) {
         var piece = game.get(square);
-        // เลือกเฉพาะตัวหมากที่เป็นตาของฝ่ายตัวเอง
         if (piece && piece.color === game.turn()) {
             selectedSquare = square;
-            greySquare(square);
-            var moves = game.moves({ square: square, verbose: true });
-            for (var i = 0; i < moves.length; i++) {
-                greySquare(moves[i].to);
-            }
+            showLegalMovesForSquare(square);
         }
     } else {
-        // พยายามเดินไปยังช่องที่คลิกครั้งที่ 2
         var move = game.move({
             from: selectedSquare,
             to: square,
@@ -187,15 +186,10 @@ function handleSquareClick(square) {
         selectedSquare = null;
 
         if (move === null) {
-            // ถ้าคลิกเปลี่ยนตัวหมากเป็นตัวอื่นของตัวเอง
             var piece = game.get(square);
             if (piece && piece.color === game.turn() && prevSelected !== square) {
                 selectedSquare = square;
-                greySquare(square);
-                var moves = game.moves({ square: square, verbose: true });
-                for (var i = 0; i < moves.length; i++) {
-                    greySquare(moves[i].to);
-                }
+                showLegalMovesForSquare(square);
             }
             return;
         }
@@ -213,13 +207,15 @@ function onDragStart(source, piece) {
         (game.turn() === 'b' && piece.search(/^w/) !== -1)) {
         return false;
     }
-    selectedSquare = null;
+    selectedSquare = source;
     removeGreySquares();
+    showLegalMovesForSquare(source);
 }
 
 // วางตัวหมากจากการลาก
 function onDrop(source, target) {
     removeGreySquares();
+    selectedSquare = null;
 
     var move = game.move({
         from: source,
@@ -250,7 +246,6 @@ var config = {
 
 board = Chessboard('board', config);
 
-// ดักจับอีเวนต์คลิกบนช่องกระดานอย่างแม่นยำ
 $(document).ready(function() {
     $(document).on('click', '#board .square-55d63', function(e) {
         e.stopPropagation();
@@ -264,7 +259,6 @@ $(document).ready(function() {
         }
     });
 
-    // คลิกพื้นที่ว่างเพื่อยกเลิกการเลือก
     $(document).on('click', function(e) {
         if (!$(e.target).closest('#board').length) {
             selectedSquare = null;

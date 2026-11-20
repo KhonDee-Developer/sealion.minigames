@@ -3,220 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MiniGameSeaLion — ArtCraft Arcade Edition</title>
+    <title>MiniGameSeaLion — Craft Arcade</title>
     <link rel="stylesheet" href="home.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Ambient Background Glow & Noise -->
-    <div class="noise-overlay"></div>
-    <div class="bg-glow glow-1"></div>
-    <div class="bg-glow glow-2"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
 
-    <!-- Header / Navbar -->
-    <header class="navbar">
-        <div class="logo">
-            <span class="logo-dot"></span>
-            MINIGAME<span class="logo-thin">SEALION</span>
+    <!-- Top Navigation -->
+    <header class="top-nav">
+        <div class="nav-left">
+            <a href="#home" class="brand">
+                <span class="brand-mark"></span>
+                <span>MINIGAMESEALION</span>
+            </a>
+            <nav class="nav-links">
+                <a href="#home">Overview</a>
+                <a href="#games">Lineup</a>
+                <a href="#principles">Principles</a>
+            </nav>
         </div>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="#home">EXHIBITION</a></li>
-                <li><a href="#games">COLLECTION</a></li>
-                <li class="user-pill"><span id="userGreeting"></span></li>
-                <li><button id="logoutBtn" class="btn-logout">ออกจากระบบ</button></li>
-            </ul>
-        </nav>
+
+        <div class="nav-right">
+            <span class="user-pill" id="userGreeting"></span>
+            <button type="button" id="logoutBtn" class="btn-outline-sm">ออกจากระบบ</button>
+        </div>
     </header>
 
-    <!-- Hero Section -->
+    <!-- 01 / Hero Section -->
     <section id="home" class="hero">
-        <div class="hero-bg-text" aria-hidden="true">ARCADE</div>
+        <div class="container">
+            <div class="section-eyebrow">01 / CRAFT ARCADE</div>
+            <div class="hero-meta">Six mini-games · Browser native · Curated by MiniGameSeaLion</div>
+            <h1 class="hero-title">Six crafts.<br>One arcade.</h1>
+            <p class="hero-desc">
+                คอลเลกชันมินิเกมที่คัดสรรและสร้างสรรค์โดยคณะสมาคมสิงโตทะเล เปิดเล่นได้ทันทีบนเบราว์เซอร์
+                พร้อมระบบจัดหมวดหมู่และการเข้าถึงที่รวดเร็วในที่เดียว
+            </p>
 
-        <div class="hud-corner top-left">+</div>
-        <div class="hud-corner top-right">+</div>
-        <div class="hud-corner bottom-left">+</div>
-        <div class="hud-corner bottom-right">+</div>
-
-        <div class="hero-content">
-            <div class="hero-badge">
-                <span class="live-dot"></span> INTERACTIVE PLAYGROUND • VOL. 2026
-            </div>
-            <h1>CRAFTED <span class="text-outline">FOR</span><br>PURE <span class="text-accent">PLAY.</span></h1>
-            <p>อาณาจักรมินิเกมดีไซน์พิเศษโดยคณะสมาคมสิงโตทะเล สัมผัสประสบการณ์ความสนุกได้ทันทีบนเบราว์เซอร์</p>
-            
             <div class="hero-actions">
-                <a href="#games" class="btn-primary">สำรวจคอลเลกชันเกม <span>↗</span></a>
-                <div class="hero-stats">
-                    <div class="stat-box">
-                        <strong>05</strong>
-                        <span>TITLES</span>
-                    </div>
-                    <div class="stat-divider"></div>
-                    <div class="stat-box">
-                        <strong>60FPS</strong>
-                        <span>WEB ENGINE</span>
-                    </div>
+                <a href="#games" class="btn-dark">
+                    <span>Explore Lineup</span>
+                    <span>↓</span>
+                </a>
+                <div class="hero-spec-pills">
+                    <span class="spec-pill">06 TITLES</span>
+                    <span class="spec-pill">WEB ENGINE</span>
+                    <span class="spec-pill">INSTANT PLAY</span>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- แถบตัววิ่งสไตล์ ArtCraft (Infinite Marquee) -->
-    <div class="marquee-wrapper">
-        <div class="marquee-track">
-            <span>MINIGAME SEALION COMMUNITY</span> ✦
-            <span>SNAKE ARCADE</span> ✦
-            <span>TIC-TAC-TOE MULTIPLAYER</span> ✦
-            <span>SPACE RUNNER</span> ✦
-            <span>MEMORY MATCH</span> ✦
-            <span>CHESS BOARD</span> ✦
-            <span>NO DOWNLOAD REQUIRED</span> ✦
-            <span>MINIGAME SEALION COMMUNITY</span> ✦
-            <span>SNAKE ARCADE</span> ✦
-            <span>TIC-TAC-TOE MULTIPLAYER</span> ✦
-            <span>SPACE RUNNER</span> ✦
-            <span>MEMORY MATCH</span> ✦
-            <span>CHESS BOARD</span> ✦
-            <span>NO DOWNLOAD REQUIRED</span> ✦
-        </div>
-    </div>
-
-    <!-- Game List Section -->
+    <!-- 02 / The Lineup -->
     <section id="games" class="games-section">
-        <div class="section-header">
-            <div>
-                <span class="section-tag">CURATED ARCADE // 01—05</span>
-                <h2>คณะสมาคมสิงโตทะเล</h2>
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <div class="section-eyebrow">02 / THE LINEUP</div>
+                    <h2>Pick a game to play</h2>
+                    <p class="section-sub">คณะสมาคมสิงโตทะเล — เลือกเกมที่ต้องการเล่นหรือกรองตามหมวดหมู่</p>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar" role="tablist" aria-label="หมวดหมู่เกม">
+                    <button type="button" class="filter-btn active" data-category="all">ทั้งหมด</button>
+                    <button type="button" class="filter-btn" data-category="arcade">อาร์เคด</button>
+                    <button type="button" class="filter-btn" data-category="action">แอคชั่น</button>
+                    <button type="button" class="filter-btn" data-category="puzzle">พัซเซิล</button>
+                    <button type="button" class="filter-btn" data-category="strategy">กลยุทธ์</button>
+                </div>
             </div>
 
-            <!-- Filter Category -->
-            <div class="filter-buttons">
-                <button class="filter-btn active" data-category="all">ทั้งหมด [05]</button>
-                <button class="filter-btn" data-category="action">แอคชั่น</button>
-                <button class="filter-btn" data-category="puzzle">พัซเซิล</button>
-                <button class="filter-btn" data-category="arcade">อาร์เคด</button>
-                <button class="filter-btn" data-category="strategy">กลยุทธ์</button>
+            <!-- Game Cards Grid -->
+            <div class="game-grid">
+
+                <!-- 01 Snake -->
+                <article class="game-card" data-category="arcade">
+                    <div class="card-top">
+                        <span class="card-num">01</span>
+                        <span class="card-cat">ARCADE</span>
+                    </div>
+                    <div class="card-preview preview-1">
+                        <div class="preview-inner-grid"></div>
+                        <span class="preview-emoji">🐍</span>
+                        <span class="preview-badge">CLASSIC</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title-row">
+                            <h3>Snake</h3>
+                            <span class="card-tag-pill">Ready</span>
+                        </div>
+                        <p class="card-desc">เกมงูกินจุด เลื้อยเก็บแต้มและทำลายสถิติความยาวสูงสุด</p>
+                        <div class="card-meta">
+                            <span>MODE: SOLO</span>
+                            <span>SPEED: DYNAMIC</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn-card-action" data-game="Snake">
+                            <span>Launch Snake</span>
+                            <span>↗</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- 02 XO -->
+                <article class="game-card" data-category="strategy">
+                    <div class="card-top">
+                        <span class="card-num">02</span>
+                        <span class="card-cat">STRATEGY</span>
+                    </div>
+                    <div class="card-preview preview-2">
+                        <div class="preview-inner-grid"></div>
+                        <span class="preview-emoji">❌⭕</span>
+                        <span class="preview-badge">3×3 GRID</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title-row">
+                            <h3>Tic-Tac-Toe</h3>
+                            <span class="card-tag-pill">Ready</span>
+                        </div>
+                        <p class="card-desc">เกมกระดาน XO ประลองการวางหมาก 3 ช่องเรียงกัน</p>
+                        <div class="card-meta">
+                            <span>MODE: PVP / AI</span>
+                            <span>BOARD: 3×3</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn-card-action" data-game="Tic-Tac-Toe">
+                            <span>Launch Tic-Tac-Toe</span>
+                            <span>↗</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- 03 Space Runner -->
+                <article class="game-card" data-category="action">
+                    <div class="card-top">
+                        <span class="card-num">03</span>
+                        <span class="card-cat">ACTION</span>
+                    </div>
+                    <div class="card-preview preview-3">
+                        <div class="preview-inner-grid"></div>
+                        <span class="preview-emoji">🚀</span>
+                        <span class="preview-badge">SURVIVAL</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title-row">
+                            <h3>Space Runner</h3>
+                            <span class="card-tag-pill">Ready</span>
+                        </div>
+                        <p class="card-desc">บังคับยานอวกาศฝ่าดงอุกกาบาตและเก็บคะแนนระยะทาง</p>
+                        <div class="card-meta">
+                            <span>MODE: ENDLESS</span>
+                            <span>REFLEX: HIGH</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn-card-action" data-game="Space Runner">
+                            <span>Launch Space Runner</span>
+                            <span>↗</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- 04 Memory Match -->
+                <article class="game-card" data-category="puzzle">
+                    <div class="card-top">
+                        <span class="card-num">04</span>
+                        <span class="card-cat">PUZZLE</span>
+                    </div>
+                    <div class="card-preview preview-4">
+                        <div class="preview-inner-grid"></div>
+                        <span class="preview-emoji">🧠</span>
+                        <span class="preview-badge">MEMORY</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title-row">
+                            <h3>Memory Match</h3>
+                            <span class="card-tag-pill">Ready</span>
+                        </div>
+                        <p class="card-desc">เปิดไพ่จับคู่สัญลักษณ์ที่ซ่อนอยู่ ทดสอบความจำและสมาธิ</p>
+                        <div class="card-meta">
+                            <span>MODE: TIMED</span>
+                            <span>FOCUS: MEMORY</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn-card-action" data-game="Memory Match">
+                            <span>Launch Memory Match</span>
+                            <span>↗</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- 05 Chess -->
+                <article class="game-card" data-category="strategy">
+                    <div class="card-top">
+                        <span class="card-num">05</span>
+                        <span class="card-cat">STRATEGY</span>
+                    </div>
+                    <div class="card-preview preview-5">
+                        <div class="preview-inner-grid"></div>
+                        <span class="preview-emoji">♟️</span>
+                        <span class="preview-badge">BOARD</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title-row">
+                            <h3>Chess</h3>
+                            <span class="card-tag-pill">Ready</span>
+                        </div>
+                        <p class="card-desc">หมากรุกสากล วางแผนเดินหมากและชิงความได้เปรียบบนกระดาน</p>
+                        <div class="card-meta">
+                            <span>MODE: TACTICAL</span>
+                            <span>BOARD: 8×8</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn-card-action" data-game="Chess">
+                            <span>Launch Chess</span>
+                            <span>↗</span>
+                        </button>
+                    </div>
+                </article>
+
+                <!-- 06 Logic Gate -->
+                <article class="game-card" data-category="puzzle">
+                    <div class="card-top">
+                        <span class="card-num">06</span>
+                        <span class="card-cat">PUZZLE</span>
+                    </div>
+                    <div class="card-preview preview-6">
+                        <div class="preview-inner-grid"></div>
+                        <span class="preview-emoji">⚡</span>
+                        <span class="preview-badge">DIGITAL</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-title-row">
+                            <h3>Logic Gate</h3>
+                            <span class="card-tag-pill">Ready</span>
+                        </div>
+                        <p class="card-desc">ทดลองต่อและทดสอบวงจรลอจิกเกตแบบโต้ตอบได้ทันที</p>
+                        <div class="card-meta">
+                            <span>MODE: SANDBOX</span>
+                            <span>LOGIC: GATES</span>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn-card-action" data-game="Logic Gate">
+                            <span>Launch Logic Gate</span>
+                            <span>↗</span>
+                        </button>
+                    </div>
+                </article>
+
             </div>
         </div>
+    </section>
 
-        <!-- Game Cards Container -->
-        <div class="game-grid">
-            
-            <!-- Game Card 1: Snake -->
-            <div class="game-card" data-category="arcade">
-                <div class="card-top-meta">
-                    <span class="card-index">NO. 01 // 1997</span>
-                    <span class="card-tag">ARCADE</span>
+    <!-- 03 / Principles -->
+    <section id="principles" class="principles-section">
+        <div class="container">
+            <div class="section-eyebrow">03 / PRINCIPLES</div>
+            <h2>Shared by every game</h2>
+
+            <div class="principles-grid">
+                <div class="principle-item">
+                    <span class="p-num">01</span>
+                    <h3>Instant in browser</h3>
+                    <p>ไม่ต้องติดตั้งโปรแกรมเพิ่มเติม เปิดใช้งานและเริ่มเล่นได้ทันทีบนเบราว์เซอร์</p>
                 </div>
-                <div class="game-thumb thumb-snake">
-                    <div class="thumb-grid"></div>
-                    <span class="emoji-icon">🐍</span>
+                <div class="principle-item">
+                    <span class="p-num">02</span>
+                    <h3>Focused & clean</h3>
+                    <p>ออกแบบอินเทอร์เฟซให้เรียบง่าย อ่านง่าย และโฟกัสกับตัวเกมได้เต็มที่</p>
                 </div>
-                <div class="game-info">
-                    <h3>เกมงูกินจุด (Snake)</h3>
-                    <p>เลื้อยเก็บจุดทำลายสถิติให้ยาวที่สุด</p>
-                    <button class="btn-play" onclick="playGame('Snake')">
-                        <span>PLAY NOW</span>
-                        <span class="arrow">↗</span>
-                    </button>
+                <div class="principle-item">
+                    <span class="p-num">03</span>
+                    <h3>Built for play</h3>
+                    <p>รวบรวมเกมหลากหลายสไตล์ ทั้งแอคชั่น พัซเซิล กลยุทธ์ และอาร์เคดในที่เดียว</p>
                 </div>
             </div>
-
-            <!-- Game Card 2: XO -->
-            <div class="game-card" data-category="strategy">
-                <div class="card-top-meta">
-                    <span class="card-index">NO. 02 // PVP</span>
-                    <span class="card-tag">STRATEGY</span>
-                </div>
-                <div class="game-thumb thumb-xo">
-                    <div class="thumb-grid"></div>
-                    <span class="emoji-icon">❌⭕</span>
-                </div>
-                <div class="game-info">
-                    <h3>XO (Tic-Tac-Toe)</h3>
-                    <p>เกมประลองปัญญา 3x3 ช่อง</p>
-                    <button class="btn-play" onclick="playGame('Tic-Tac-Toe')">
-                        <span>PLAY NOW</span>
-                        <span class="arrow">↗</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Game Card 3: Space Runner -->
-            <div class="game-card" data-category="action">
-                <div class="card-top-meta">
-                    <span class="card-index">NO. 03 // SURVIVAL</span>
-                    <span class="card-tag">ACTION</span>
-                </div>
-                <div class="game-thumb thumb-space">
-                    <div class="thumb-grid"></div>
-                    <span class="emoji-icon">🚀</span>
-                </div>
-                <div class="game-info">
-                    <h3>Space Runner</h3>
-                    <p>ตะลุยอวกาศบังคับยานหลบฝนอุกกาบาต</p>
-                    <button class="btn-play" onclick="playGame('Space Runner')">
-                        <span>PLAY NOW</span>
-                        <span class="arrow">↗</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Game Card 4: Memory Match -->
-            <div class="game-card" data-category="puzzle">
-                <div class="card-top-meta">
-                    <span class="card-index">NO. 04 // BRAIN</span>
-                    <span class="card-tag">PUZZLE</span>
-                </div>
-                <div class="game-thumb thumb-memory">
-                    <div class="thumb-grid"></div>
-                    <span class="emoji-icon">🧠</span>
-                </div>
-                <div class="game-info">
-                    <h3>Memory Match</h3>
-                    <p>เปิดป้ายจับคู่ภาพที่ซ่อน ฝึกความจำ</p>
-                    <button class="btn-play" onclick="playGame('Memory Match')">
-                        <span>PLAY NOW</span>
-                        <span class="arrow">↗</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Game Card 5: Chess -->
-            <div class="game-card" data-category="strategy">
-                <div class="card-top-meta">
-                    <span class="card-index">NO. 05 // BOARD</span>
-                    <span class="card-tag">STRATEGY</span>
-                </div>
-                <div class="game-thumb thumb-chess">
-                    <div class="thumb-grid"></div>
-                    <span class="emoji-icon">♟️</span>
-                </div>
-                <div class="game-info">
-                    <h3>Chess (หมากรุกสากล)</h3>
-                    <p>เกมกระดานกลยุทธ์มาตรฐานสากล</p>
-                    <button class="btn-play" onclick="playGame('Chess')">
-                        <span>PLAY NOW</span>
-                        <span class="arrow">↗</span>
-                    </button>
-                </div>
-            </div>
-
         </div>
     </section>
 
     <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-left">
-                <span class="footer-brand">MINIGAMESEALION STUDIO</span>
-                <span class="footer-sub">CRAFTED FOR INTERACTIVE FUN</span>
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <div>
+                <div class="footer-brand">MINIGAMESEALION</div>
+                <div class="footer-copy">คณะสมาคมสิงโตทะเล · Crafted Arcade Collection</div>
             </div>
-            <p>&copy; 2026 MiniGameSeaLion. All rights reserved.</p>
+            <div class="footer-mono">© 2026 MINIGAMESEALION</div>
         </div>
     </footer>
 

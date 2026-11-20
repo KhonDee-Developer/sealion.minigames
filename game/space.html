@@ -3,62 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Space Runner — ArtCraft Arcade</title>
+    <title>Space Runner — MiniGameSeaLion Craft</title>
     <link rel="stylesheet" href="space.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Ambient Background Glow -->
-    <div class="bg-glow glow-1"></div>
-    <div class="bg-glow glow-2"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
 
     <!-- Top Navigation Bar -->
-    <nav class="top-bar">
-        <a href="home.html" class="btn-back"><span>←</span> กลับสู่หน้าคอลเลกชัน</a>
-        <div class="top-brand">MINIGAMESEALION // ACTION</div>
-    </nav>
+    <header class="top-bar">
+        <a href="home.html" class="btn-back">
+            <span>←</span>
+            <span>กลับสู่คอลเลกชัน</span>
+        </a>
+        <div class="top-brand">
+            <span class="brand-dot"></span>
+            <span>MINIGAMESEALION // 03 SPACE RUNNER</span>
+        </div>
+    </header>
 
-    <!-- Main Cockpit Layout -->
+    <!-- Main 2-Column Workspace -->
     <main class="arcade-layout">
-        
+
         <!-- ฝั่งซ้าย: จอเล่นเกมหลัก -->
-        <div class="canvas-stage">
+        <section class="canvas-stage">
             <div class="stage-header">
-                <span class="live-indicator"><span class="dot"></span> LIVE SESSION</span>
-                <span class="stage-code">SURVIVAL MODE</span>
+                <div class="stage-eyebrow">03 / PLAYABLE STAGE</div>
+                <div class="stage-meta">
+                    <span class="live-indicator"><span class="dot"></span> LIVE SESSION</span>
+                    <span class="stage-pill">SURVIVAL</span>
+                </div>
             </div>
 
             <div class="canvas-wrapper">
                 <canvas id="spaceCanvas" width="380" height="460"></canvas>
-                
+
                 <!-- หน้าต่างแสดงตอนจบเกม -->
                 <div id="gameMessage" class="game-message hidden">
+                    <span class="overlay-eyebrow">SESSION ENDED</span>
                     <h2 id="messageText">GAME OVER</h2>
-                    <p id="subMessageText" class="sub-message">กดปุ่ม R เพื่อเล่นใหม่</p>
-                    <button id="restartBtn" class="btn-primary">เล่นอีกครั้ง ↻</button>
+                    <p id="subMessageText" class="sub-message">กดปุ่ม R หรือ Space เพื่อเริ่มใหม่อีกครั้ง</p>
+                    <button type="button" id="restartBtn" class="btn-primary">
+                        <span>เล่นอีกครั้ง</span>
+                        <span>↻</span>
+                    </button>
                 </div>
             </div>
 
             <!-- ปุ่มควบคุม 4 ทิศทางสำหรับมือถือ -->
-            <div class="mobile-controls">
+            <div class="mobile-controls" aria-label="ปุ่มควบคุมทิศทางยานบนมือถือ">
                 <div class="control-row">
-                    <button id="btnUp" class="control-btn">▲ ขึ้น</button>
+                    <button type="button" id="btnUp" class="control-btn">▲ ขึ้น</button>
                 </div>
                 <div class="control-row">
-                    <button id="btnLeft" class="control-btn">◀ ซ้าย</button>
-                    <button id="btnDown" class="control-btn">▼ ลง</button>
-                    <button id="btnRight" class="control-btn">ขวา ▶</button>
+                    <button type="button" id="btnLeft" class="control-btn">◀ ซ้าย</button>
+                    <button type="button" id="btnDown" class="control-btn">▼ ลง</button>
+                    <button type="button" id="btnRight" class="control-btn">ขวา ▶</button>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- ฝั่งขวา: แผงข้อมูล คะแนน และวิธีเล่น -->
         <aside class="side-panel">
             <div class="panel-card title-card">
-                <span class="game-badge">ACTION NO. 03</span>
+                <span class="game-eyebrow">CRAFT TITLE // 03</span>
                 <h1>🚀 Space Runner</h1>
                 <p>บังคับยานอวกาศหลบหลีกฝนอุกกาบาตที่พุ่งเข้ามาด้วยความเร็วสูง ยิ่งรอดนาน ยิ่งท้าทาย!</p>
             </div>
@@ -75,15 +86,22 @@
             </div>
 
             <div class="panel-card controls-guide">
-                <h3>วิธีการควบคุม (CONTROLS)</h3>
+                <span class="guide-eyebrow">INPUT REFERENCE</span>
+                <h3>วิธีการควบคุม</h3>
                 <div class="key-row">
                     <div class="key-caps">
-                        <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> หรือ <kbd>▲</kbd><kbd>▼</kbd><kbd>◄</kbd><kbd>►</kbd>
+                        <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
+                        <span class="key-sep">/</span>
+                        <kbd>▲</kbd><kbd>▼</kbd><kbd>◄</kbd><kbd>►</kbd>
                     </div>
                     <span>บังคับทิศทางยาน</span>
                 </div>
                 <div class="key-row">
-                    <div class="key-caps"><kbd>R</kbd> หรือ <kbd>Space</kbd></div>
+                    <div class="key-caps">
+                        <kbd>R</kbd>
+                        <span class="key-sep">/</span>
+                        <kbd>Space</kbd>
+                    </div>
                     <span>เริ่มเกมใหม่เมื่อจบเกม</span>
                 </div>
             </div>

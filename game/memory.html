@@ -3,53 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Memory Match — ArtCraft Arcade</title>
+    <title>Memory Match — MiniGameSeaLion Craft</title>
     <link rel="stylesheet" href="memory.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Ambient Background Glow -->
-    <div class="bg-glow glow-1"></div>
-    <div class="bg-glow glow-2"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
 
     <!-- Top Navigation Bar -->
-    <nav class="top-bar">
-        <a href="home.html" class="btn-back"><span>←</span> กลับสู่หน้าคอลเลกชัน</a>
-        <div class="top-brand">MINIGAMESEALION // BRAIN PUZZLE</div>
-    </nav>
+    <header class="top-bar">
+        <a href="home.html" class="btn-back">
+            <span>←</span>
+            <span>กลับสู่คอลเลกชัน</span>
+        </a>
+        <div class="top-brand">
+            <span class="brand-dot"></span>
+            <span>MINIGAMESEALION // 04 MEMORY MATCH</span>
+        </div>
+    </header>
 
-    <!-- Main Cockpit Layout -->
+    <!-- Main 2-Column Workspace -->
     <main class="arcade-layout">
 
-        <!-- ฝั่งซ้าย: พื้นที่เล่นเกม / เลือกโหมด / ล็อบบี้ -->
-        <div class="canvas-stage">
-            
+        <!-- ฝั่งซ้าย: พื้นที่เลือกโหมด / ล็อบบี้ออนไลน์ / กระดานไพ่ -->
+        <section class="canvas-stage">
+
             <!-- 1. หน้าเลือกโหมดเกม -->
             <div id="modeSelection" class="lobby-section">
                 <div class="stage-header">
-                    <span class="game-badge">PUZZLE NO. 04</span>
+                    <span class="game-eyebrow">04 / BRAIN PUZZLE</span>
                     <span class="live-indicator"><span class="dot"></span> SELECT MODE</span>
                 </div>
                 <h1>🧠 Memory Match</h1>
                 <p class="section-desc">ฝึกความจำและสมาธิ เปิดป้ายจับคู่ภาพไอคอนที่ซ่อนอยู่</p>
-                
+
                 <div class="mode-buttons">
-                    <button onclick="selectMode('single')" class="btn-mode">
+                    <button type="button" onclick="selectMode('single')" class="btn-mode">
                         <span class="icon">👤</span>
                         <div>
                             <strong>เล่นคนเดียว (ฝึกความจำ)</strong>
                             <span>ทำสถิติเวลาและจำนวนครั้งให้น้อยที่สุด</span>
                         </div>
+                        <span class="mode-arrow">↗</span>
                     </button>
-                    <button onclick="selectMode('online')" class="btn-mode">
+                    <button type="button" onclick="selectMode('online')" class="btn-mode">
                         <span class="icon">🌐</span>
                         <div>
                             <strong>เล่นออนไลน์ (หลายเครื่อง)</strong>
                             <span>สร้างห้องหรือใส่รหัสเพื่อแข่งจับคู่กับเพื่อน</span>
                         </div>
+                        <span class="mode-arrow">↗</span>
                     </button>
                 </div>
             </div>
@@ -57,18 +63,18 @@
             <!-- 2. หน้าล็อบบี้ออนไลน์ -->
             <div id="onlineLobby" class="lobby-section hidden">
                 <div class="stage-header">
-                    <span class="game-badge">ONLINE LOBBY</span>
+                    <span class="game-eyebrow">ONLINE LOBBY</span>
                     <span class="live-indicator"><span class="dot"></span> NETWORK</span>
                 </div>
                 <h1>🌐 ห้องเกมออนไลน์</h1>
                 <p class="section-desc">สร้างห้องใหม่เพื่อรับรหัส หรือกรอกรหัส 8 หลักเพื่อเข้าร่วม</p>
-                
+
                 <div class="lobby-box">
-                    <button onclick="createOnlineRoom()" class="btn-primary glow">✨ สร้างห้องใหม่</button>
+                    <button type="button" onclick="createOnlineRoom()" class="btn-primary">✨ สร้างห้องใหม่</button>
                     <div class="divider"><span>หรือเชื่อมต่อด้วยรหัส</span></div>
                     <div class="join-group">
                         <input type="text" id="roomIdInput" placeholder="รหัส 8 หลัก" maxlength="8">
-                        <button onclick="joinOnlineRoom()" class="btn-secondary">เข้าร่วม</button>
+                        <button type="button" onclick="joinOnlineRoom()" class="btn-secondary">เข้าร่วม</button>
                     </div>
                 </div>
 
@@ -78,18 +84,18 @@
                     <p id="roomStatusText" class="pulse-text">⏳ กำลังรอผู้เล่นคนที่ 2...</p>
                 </div>
 
-                <button onclick="backToMenu()" class="btn-back-mode">⬅ กลับไปหน้าเลือกโหมด</button>
+                <button type="button" onclick="backToMenu()" class="btn-back-mode">← กลับไปหน้าเลือกโหมด</button>
             </div>
 
             <!-- 3. พื้นที่เล่นเกมจริง -->
             <div id="gameArea" class="hidden">
                 <div class="stage-header game-active-header">
                     <span class="live-indicator"><span class="dot"></span> LIVE MATCH</span>
-                    <button onclick="restartGame()" class="btn-restart">🔄 เริ่มใหม่</button>
+                    <button type="button" onclick="restartGame()" class="btn-restart">🔄 เริ่มใหม่ (R)</button>
                 </div>
 
-                <div class="turn-indicator hidden" id="turnIndicator">ตาของ: ผู้เล่น 1 🔴</div>
-                
+                <div class="turn-indicator hidden" id="turnIndicator">ตาของ: ผู้เล่น 1</div>
+
                 <!-- Score Board -->
                 <div class="score-board" id="scoreBoardContainer"></div>
 
@@ -103,21 +109,22 @@
                     <div class="cards-grid" id="cardGrid"></div>
                 </div>
 
-                <button onclick="backToMenu()" class="btn-secondary" style="width: 100%; margin-top: 1.5rem;">🏠 ออกไปหน้าเลือกโหมด</button>
+                <button type="button" onclick="backToMenu()" class="btn-secondary btn-exit-game">← ออกไปหน้าเลือกโหมด</button>
             </div>
 
-        </div>
+        </section>
 
         <!-- ฝั่งขวา: แผงข้อมูลและกฎกติกา -->
         <aside class="side-panel">
             <div class="panel-card title-card">
-                <span class="game-badge">PUZZLE NO. 04</span>
+                <span class="game-eyebrow">CRAFT TITLE // 04</span>
                 <h1>🧠 Memory Match</h1>
                 <p>ทดสอบพลังสมอง เปิดแผ่นป้ายรูปภาพที่คว่ำอยู่ทีละ 2 ใบเพื่อหาคู่ที่เหมือนกันให้ครบทุกคู่ในเวลาและจำนวนครั้งที่น้อยที่สุด</p>
             </div>
 
             <div class="panel-card controls-guide">
-                <h3>วิธีการเล่น (RULES)</h3>
+                <span class="guide-eyebrow">MATCH RULES</span>
+                <h3>วิธีการเล่น</h3>
                 <div class="rule-row">
                     <span>1. คลิกเลือกแผ่นป้ายเพื่อเปิดไอคอนที่ซ่อนอยู่ทีละ 2 ใบ</span>
                 </div>
@@ -135,11 +142,12 @@
     <!-- หน้าต่างแสดงตอนจบเกม -->
     <div id="gameMessage" class="game-message hidden">
         <div class="message-card">
+            <span class="overlay-eyebrow">ROUND COMPLETE</span>
             <h2 id="winnerText">🎉 เกมจบแล้ว!</h2>
             <p class="sub-message" id="finalScoreText">คะแนนรวม...</p>
-            <div style="display: flex; flex-direction: column; gap: 8px;">
-                <button onclick="restartGame()" class="btn-primary" style="width: 100%;">🔄 เล่นใหม่อีกครั้ง</button>
-                <button onclick="backToMenu()" class="btn-secondary" style="width: 100%;">⬅ กลับหน้าหลัก</button>
+            <div class="modal-actions">
+                <button type="button" onclick="restartGame()" class="btn-primary">🔄 เล่นใหม่อีกครั้ง</button>
+                <button type="button" onclick="backToMenu()" class="btn-secondary">← กลับหน้าหลัก</button>
             </div>
         </div>
     </div>

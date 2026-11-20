@@ -3,66 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess — ArtCraft Arcade</title>
+    <title>Chess — MiniGameSeaLion Craft</title>
     <!-- โหลด CSS ของ chessboard.js -->
     <link rel="stylesheet" href="https://unpkg.com/@chrisoakman/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
     <link rel="stylesheet" href="chess.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Ambient Background Glow -->
-    <div class="bg-glow glow-1"></div>
-    <div class="bg-glow glow-2"></div>
+    <div class="bg-grid" aria-hidden="true"></div>
 
     <!-- Top Navigation Bar -->
-    <nav class="top-bar">
-        <a href="home.html" class="btn-back"><span>←</span> กลับสู่หน้าคอลเลกชัน</a>
-        <div class="top-brand">MINIGAMESEALION // STRATEGY</div>
-    </nav>
+    <header class="top-bar">
+        <a href="home.html" class="btn-back">
+            <span>←</span>
+            <span>กลับสู่คอลเลกชัน</span>
+        </a>
+        <div class="top-brand">
+            <span class="brand-dot"></span>
+            <span>MINIGAMESEALION // 05 CHESS STRATEGY</span>
+        </div>
+    </header>
 
     <!-- Main Cockpit Layout -->
     <main class="arcade-layout">
-        
+
         <!-- ฝั่งซ้าย: กระดานหมากรุก -->
-        <div class="canvas-stage">
+        <section class="canvas-stage">
             <div class="stage-header">
-                <span class="live-indicator"><span class="dot"></span> LIVE MATCH</span>
+                <div class="stage-meta">
+                    <span class="live-indicator"><span class="dot"></span> LIVE MATCH</span>
+                    <span class="stage-pill">FIDE RULES</span>
+                </div>
                 <span class="stage-code" id="statusText">กำลังโหลดเกม...</span>
             </div>
 
             <div class="board-wrapper">
-                <div id="board" style="width: 400px;"></div>
+                <div id="board" class="chess-board-box"></div>
             </div>
 
             <div class="stage-footer">
-                <button class="btn-secondary" onclick="resetGame()">🔄 เริ่มเกมใหม่</button>
+                <button type="button" class="btn-secondary" onclick="resetGame()">🔄 เริ่มเกมใหม่</button>
                 <a href="home.html" class="btn-secondary">🏠 กลับหน้าหลัก</a>
             </div>
-        </div>
+        </section>
 
         <!-- ฝั่งขวา: แผงข้อมูล ประวัติการเดิน และกติกา -->
         <aside class="side-panel">
             <div class="panel-card title-card">
-                <span class="game-badge">STRATEGY NO. 05</span>
+                <span class="game-eyebrow">CRAFT TITLE // 05</span>
                 <h1>♟️ Chess (หมากรุกสากล)</h1>
-                <p>เกมกระดานกลยุทธ์ระดับมาตรฐานสากล รองรับการลากวางตัวหมาก ตรวจสอบกฎการเดิน และระบบเตือนการรุกอัตโนมัติ</p>
+                <p>เกมกระดานกลยุทธ์ระดับมาตรฐานสากล รองรับการลากวางหรือคลิกเดินตัวหมาก ตรวจสอบกฎการเดิน และระบบเตือนการรุกอัตโนมัติ</p>
             </div>
 
-            <!-- กล่องแสดงประวัติการเดินหมาก (Move History) แบบ Chess.com -->
+            <!-- กล่องแสดงประวัติการเดินหมาก (Move History) -->
             <div class="panel-card history-card">
-                <h3>ประวัติการเดิน (MOVES)</h3>
-                <div class="move-history-container" id="moveHistory">
-                    <!-- รายการเดินจะถูกเพิ่มตรงนี้อัตโนมัติ -->
-                </div>
+                <span class="guide-eyebrow">MOVE LOG</span>
+                <h3>ประวัติการเดิน</h3>
+                <div class="move-history-container" id="moveHistory"></div>
             </div>
 
             <div class="panel-card controls-guide">
-                <h3>วิธีการเล่น (RULES)</h3>
+                <span class="guide-eyebrow">MATCH RULES</span>
+                <h3>วิธีการเล่น</h3>
                 <div class="rule-row">
-                    <span>1. คลิกและลากตัวหมากเพื่อเดิน (ฝ่ายขาวเริ่มก่อน)</span>
+                    <span>1. คลิกหรือลากวางตัวหมากเพื่อเดิน (ฝ่ายขาวเริ่มก่อน)</span>
                 </div>
                 <div class="rule-row">
                     <span>2. ระบบจะตรวจสอบความถูกต้องตามกฎสากลให้ทันที</span>
@@ -78,9 +85,10 @@
     <!-- หน้าต่างแสดงตอนจบเกม -->
     <div id="gameMessage" class="game-message hidden">
         <div class="message-card">
+            <span class="overlay-eyebrow">MATCH COMPLETE</span>
             <h2 id="winnerText">🎉 เกมจบแล้ว!</h2>
             <p class="sub-message" id="finalScoreText">รุกฆาตสำเร็จ</p>
-            <button onclick="resetGame()" class="btn-primary">เล่นใหม่อีกครั้ง ↻</button>
+            <button type="button" onclick="resetGame()" class="btn-primary">เล่นใหม่อีกครั้ง ↻</button>
         </div>
     </div>
 
